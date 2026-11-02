@@ -9,27 +9,32 @@ interface ProductCardProps {
 }
 
 const CardWrapper = styled.div<{ $soon: boolean }>`
-  background: ${({ theme }) => theme.colors.cardBg};
-  border: 1px solid ${({ theme }) => theme.colors.borderDark};
-  border-radius: 16px;
-  padding: 16px;
-  backdrop-filter: blur(6px);
+  background: rgba(14, 17, 25, 0.86);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 18px;
+  padding: 18px;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.65);
   transition:
     transform 0.3s,
-    border-color 0.3s;
-  opacity: ${({ $soon }) => ($soon ? 0.55 : 1)};
+    border-color 0.3s,
+    box-shadow 0.3s;
+  opacity: ${({ $soon }) => ($soon ? 0.65 : 1)};
 
   &:hover {
     transform: translateY(-8px);
     border-color: ${({ theme }) => theme.colors.blue};
+    box-shadow: 0 18px 44px rgba(0, 0, 0, 0.85);
   }
 
   h4 {
     font-family: ${({ theme }) => theme.fonts.display};
     font-weight: 400;
     letter-spacing: 0.05em;
-    font-size: 1.2rem;
+    font-size: 1.3rem;
     text-transform: uppercase;
+    color: #ffffff;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
   }
 
   div.m {
@@ -37,34 +42,45 @@ const CardWrapper = styled.div<{ $soon: boolean }>`
     justify-content: space-between;
     align-items: center;
     margin-top: 10px;
-    color: ${({ theme }) => theme.colors.textMuted};
-    font-size: 0.85rem;
+    color: #cbd5e1;
+    font-size: 0.9rem;
+    font-weight: 500;
 
     b {
       color: #ffffff;
+      font-size: 1.05rem;
+      text-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
     }
   }
 
   button {
-    margin-top: 12px;
+    margin-top: 14px;
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     border-radius: 30px;
-    border: 1px solid #ffffff;
-    background: none;
+    border: 1.5px solid rgba(255, 255, 255, 0.75);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(8px);
     color: #ffffff;
     font-weight: 600;
-    font-size: 0.8rem;
-    transition: background 0.2s, color 0.2s;
+    font-size: 0.85rem;
+    transition:
+      background 0.2s,
+      color 0.2s,
+      transform 0.2s,
+      border-color 0.2s;
 
     &:hover:not(:disabled) {
       background: #ffffff;
       color: #000000;
+      border-color: #ffffff;
+      transform: scale(1.02);
     }
 
     &:disabled {
-      opacity: 0.6;
+      opacity: 0.45;
       cursor: not-allowed;
+      border-color: rgba(255, 255, 255, 0.2);
     }
   }
 `;
@@ -75,15 +91,16 @@ const Swatch = styled.div<{ $isAvailable: boolean }>`
   place-items: center;
   font-family: ${({ theme }) => theme.fonts.display};
   letter-spacing: 0.15em;
-  color: #777777;
-  border-radius: 10px;
+  color: #a0aec0;
+  border-radius: 12px;
   margin-bottom: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   background: ${({ $isAvailable }) =>
     $isAvailable
       ? `url(${frontImgUrl}) center / 88% no-repeat, radial-gradient(circle at 50% 35%, #e3ddd0, #8f897c)`
-      : '#14151a'};
+      : '#12141c'};
   filter: ${({ $isAvailable }) =>
-    $isAvailable ? 'drop-shadow(0 8px 14px rgba(0, 0, 0, 0.35))' : 'none'};
+    $isAvailable ? 'drop-shadow(0 8px 16px rgba(0, 0, 0, 0.45))' : 'none'};
 `;
 
 export const ProductCard: React.FC<ProductCardProps> = ({
