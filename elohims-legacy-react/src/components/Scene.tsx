@@ -62,7 +62,7 @@ export const Scene: React.FC<SceneProps> = ({ onLoaded }) => {
 
     for (let i = 0; i < totalParticles; i++) {
       szBuffer[i] = 0.5 + Math.random() * 0.4;
-      const q = 0.5 + Math.random() * 0.4;
+      const q = 0.85 + Math.random() * 0.15;
       colBuffer[i * 3] = q;
       colBuffer[i * 3 + 1] = q;
       colBuffer[i * 3 + 2] = q;
@@ -88,13 +88,13 @@ export const Scene: React.FC<SceneProps> = ({ onLoaded }) => {
     const points = new THREE.Points(geometry, material);
     scene.add(points);
 
-    // Static background constellation
+    // Static background constellation (pure white stardust)
     const bgGeometry = new THREE.BufferGeometry();
     const bgMaterial = new THREE.PointsMaterial({
       size: 0.06,
-      color: 0xd9d2c2,
+      color: 0xffffff,
       transparent: true,
-      opacity: 0.6,
+      opacity: 0.7,
     });
     const bgPoints = new THREE.Points(bgGeometry, bgMaterial);
     scene.add(bgPoints);
@@ -171,15 +171,29 @@ export const Scene: React.FC<SceneProps> = ({ onLoaded }) => {
 
       if (buffers) {
         const { shapePositions, shapeColors, starPositions } = buffers;
-        for (let k = 0; k < totalParticles * 3; k++) {
+        for (let i = 0; i < totalParticles; i++) {
+          const k = i * 3;
+          // Synchronized R=G=B creates pure radiant white stardust without pastel rainbow discoloration
+          const starVal = 0.85 + 0.15 * (((i * 37) % 10) / 10);
+
           posBuffer[k] = isReady
             ? shapePositions[k] * (1 - sc) + starPositions[k] * sc
             : starPositions[k];
+          posBuffer[k + 1] = isReady
+            ? shapePositions[k + 1] * (1 - sc) + starPositions[k + 1] * sc
+            : starPositions[k + 1];
+          posBuffer[k + 2] = isReady
+            ? shapePositions[k + 2] * (1 - sc) + starPositions[k + 2] * sc
+            : starPositions[k + 2];
 
           if (isReady) {
-            colBuffer[k] =
-              shapeColors[k] * (1 - sc) +
-              (0.55 + 0.3 * (((k * 37) % 10) / 10)) * sc;
+            colBuffer[k] = shapeColors[k] * (1 - sc) + starVal * sc;
+            colBuffer[k + 1] = shapeColors[k + 1] * (1 - sc) + starVal * sc;
+            colBuffer[k + 2] = shapeColors[k + 2] * (1 - sc) + starVal * sc;
+          } else {
+            colBuffer[k] = starVal;
+            colBuffer[k + 1] = starVal;
+            colBuffer[k + 2] = starVal;
           }
         }
       }

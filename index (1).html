@@ -99,7 +99,7 @@ fragmentShader:'varying vec3 vC;void main(){float d=length(gl_PointCoord-.5);if(
 const pts=new THREE.Points(g,mat);scene.add(pts);
 const bg=new Float32Array(1500*3);for(let i=0;i<1500;i++)bg.set([(R()-.5)*60,(R()-.5)*36,-8-R()*10],i*3);
 const bgG=new THREE.BufferGeometry();bgG.setAttribute('position',new THREE.BufferAttribute(bg,3));
-scene.add(new THREE.Points(bgG,new THREE.PointsMaterial({size:.06,color:0xd9d2c2,transparent:true,opacity:.6})));
+scene.add(new THREE.Points(bgG,new THREE.PointsMaterial({size:.06,color:0xffffff,transparent:true,opacity:.7})));
 function resize(){ren.setSize(innerWidth,innerHeight,false);cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix()}
 addEventListener('resize',resize);resize();
 const PI=Math.PI;
@@ -113,7 +113,7 @@ addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;moved=true});
 const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
 function tick(ts){const t=ts*.001;U+=(scrollY/innerHeight-U)*(reduce?1:.07);
  const[sc0,xo,ry]=kf(U),sc=ready?sc0:1;
- for(let k=0;k<N*3;k++){pos[k]=ready?shapeP[k]*(1-sc)+star[k]*sc:star[k];if(ready)col[k]=shapeC[k]*(1-sc)+(.55+.3*((k*37)%10)/10)*sc}
+ for(let i=0;i<N;i++){const k=i*3,sv=.85+.15*(((i*37)%10)/10);for(let j=0;j<3;j++){pos[k+j]=ready?shapeP[k+j]*(1-sc)+star[k+j]*sc:star[k+j];if(ready)col[k+j]=shapeC[k+j]*(1-sc)+sv*sc;else col[k+j]=sv}}
  g.attributes.position.needsUpdate=g.attributes.aColor.needsUpdate=true;
  px+=((mx/innerWidth-.5)-px)*.05;
  pts.position.x=xo*(innerWidth>800?1:.15)*(1-sc);pts.position.y=(innerWidth>800?0:2.2)+(reduce?0:Math.sin(t*1.1)*.2*(1-sc));
