@@ -65,14 +65,9 @@ export const ShopSection: React.FC<ShopSectionProps> = ({
   return (
     <ShopContainer id="shop">
       <div className="header-group rv">
-        <span className="eyebrow">Merchandise & Drops</span>
         <h2 className="d" style={{ fontSize: 'clamp(3rem, 7vw, 6.5rem)' }}>
           Shop <span className="o">all</span>
         </h2>
-        <p className="section-sub">
-          Faith you can wear. Heavyweight cotton, oversized boxy silhouette,
-          forged in purpose and worn in legacy.
-        </p>
       </div>
 
       <Grid className="grid rv" id="grid">
