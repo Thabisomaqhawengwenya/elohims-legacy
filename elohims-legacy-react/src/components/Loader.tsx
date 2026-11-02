@@ -9,6 +9,7 @@ const LoadOverlay = styled.div<{ $fading: boolean }>`
   position: fixed;
   inset: 0;
   background: ${({ theme }) => theme.colors.bg};
+  color: #ffffff;
   z-index: 200;
   display: grid;
   place-items: center;

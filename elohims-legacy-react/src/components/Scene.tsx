@@ -18,26 +18,41 @@ interface SceneProps {
 }
 
 export const Scene: React.FC<SceneProps> = ({ onLoaded }) => {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    const container = containerRef.current;
+    if (!container) return;
 
     const isMobile = window.innerWidth < 800;
     const totalParticles = isMobile ? 20000 : 40000;
 
-    // Renderer setup
+    // Renderer setup with dynamic canvas creation to support React 18 StrictMode cleanly
     const renderer = new THREE.WebGLRenderer({
-      canvas,
       antialias: false,
       alpha: true,
+      powerPreference: 'high-performance',
     });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight, false);
+
+    const canvas = renderer.domElement;
+    canvas.id = 'gl';
+    canvas.style.position = 'fixed';
+    canvas.style.inset = '0';
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    canvas.style.display = 'block';
+    canvas.style.zIndex = '0';
+    canvas.style.pointerEvents = 'none';
+
+    container.appendChild(canvas);
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
     camera.position.z = 11;
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
 
     // Active particle buffers
     const geometry = new THREE.BufferGeometry();
@@ -86,10 +101,12 @@ export const Scene: React.FC<SceneProps> = ({ onLoaded }) => {
 
     let buffers: ParticleBuffers | null = null;
     let isReady = false;
+    let isMounted = true;
 
     // Load & sample tee images
     Promise.all([loadImage(frontImgUrl), loadImage(backImgUrl)])
       .then(([frontImg, backImg]) => {
+        if (!isMounted) return;
         buffers = buildParticleBuffers(frontImg, backImg, totalParticles);
         bgGeometry.setAttribute(
           'position',
@@ -111,7 +128,6 @@ export const Scene: React.FC<SceneProps> = ({ onLoaded }) => {
       camera.updateProjectionMatrix();
     };
     window.addEventListener('resize', onResize);
-    onResize();
 
     // Mouse & Reduced Motion states
     let mx = 0;
@@ -201,6 +217,7 @@ export const Scene: React.FC<SceneProps> = ({ onLoaded }) => {
 
     // Complete cleanup on unmount
     return () => {
+      isMounted = false;
       cancelAnimationFrame(rafId);
       window.removeEventListener('resize', onResize);
       window.removeEventListener('mousemove', onMouseMove);
@@ -212,9 +229,12 @@ export const Scene: React.FC<SceneProps> = ({ onLoaded }) => {
       bgGeometry.dispose();
       bgMaterial.dispose();
       renderer.dispose();
-      renderer.forceContextLoss();
+
+      if (canvas.parentNode) {
+        canvas.parentNode.removeChild(canvas);
+      }
     };
   }, [onLoaded]);
 
-  return <canvas id="gl" ref={canvasRef} />;
+  return <div ref={containerRef} />;
 };
