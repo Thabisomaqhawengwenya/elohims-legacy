@@ -15,10 +15,16 @@ import {
 
 interface SceneProps {
   onLoaded?: () => void;
+  isLight?: boolean;
 }
 
-export const Scene: React.FC<SceneProps> = ({ onLoaded }) => {
+export const Scene: React.FC<SceneProps> = ({ onLoaded, isLight = false }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const isLightRef = useRef<boolean>(isLight);
+
+  useEffect(() => {
+    isLightRef.current = isLight;
+  }, [isLight]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -62,7 +68,9 @@ export const Scene: React.FC<SceneProps> = ({ onLoaded }) => {
 
     for (let i = 0; i < totalParticles; i++) {
       szBuffer[i] = 0.5 + Math.random() * 0.4;
-      const q = 0.85 + Math.random() * 0.15;
+      const q = isLightRef.current
+        ? 0.18 + Math.random() * 0.12
+        : 0.85 + Math.random() * 0.15;
       colBuffer[i * 3] = q;
       colBuffer[i * 3 + 1] = q;
       colBuffer[i * 3 + 2] = q;
@@ -88,13 +96,13 @@ export const Scene: React.FC<SceneProps> = ({ onLoaded }) => {
     const points = new THREE.Points(geometry, material);
     scene.add(points);
 
-    // Static background constellation (pure white stardust)
+    // Static background constellation
     const bgGeometry = new THREE.BufferGeometry();
     const bgMaterial = new THREE.PointsMaterial({
       size: 0.06,
-      color: 0xffffff,
+      color: isLightRef.current ? 0x222630 : 0xffffff,
       transparent: true,
-      opacity: 0.7,
+      opacity: isLightRef.current ? 0.35 : 0.7,
     });
     const bgPoints = new THREE.Points(bgGeometry, bgMaterial);
     scene.add(bgPoints);
@@ -168,13 +176,19 @@ export const Scene: React.FC<SceneProps> = ({ onLoaded }) => {
 
       const [sc0, xo, ry] = interpolateKeyframes(U);
       const sc = isReady ? sc0 : 1;
+      const light = isLightRef.current;
+
+      bgMaterial.color.setHex(light ? 0x222630 : 0xffffff);
+      bgMaterial.opacity = light ? 0.35 : 0.7;
 
       if (buffers) {
         const { shapePositions, shapeColors, starPositions } = buffers;
         for (let i = 0; i < totalParticles; i++) {
           const k = i * 3;
-          // Synchronized R=G=B creates pure radiant white stardust without pastel rainbow discoloration
-          const starVal = 0.85 + 0.15 * (((i * 37) % 10) / 10);
+          // Synchronized R=G=B creates stardust without pastel rainbow discoloration
+          const starVal = light
+            ? 0.18 + 0.12 * (((i * 37) % 10) / 10)
+            : 0.85 + 0.15 * (((i * 37) % 10) / 10);
 
           posBuffer[k] = isReady
             ? shapePositions[k] * (1 - sc) + starPositions[k] * sc
@@ -187,9 +201,15 @@ export const Scene: React.FC<SceneProps> = ({ onLoaded }) => {
             : starPositions[k + 2];
 
           if (isReady) {
-            colBuffer[k] = shapeColors[k] * (1 - sc) + starVal * sc;
-            colBuffer[k + 1] = shapeColors[k + 1] * (1 - sc) + starVal * sc;
-            colBuffer[k + 2] = shapeColors[k + 2] * (1 - sc) + starVal * sc;
+            const origC = shapeColors[k];
+            const garmentC = light
+              ? origC > 0.5
+                ? 0.72
+                : 0.18
+              : origC;
+            colBuffer[k] = garmentC * (1 - sc) + starVal * sc;
+            colBuffer[k + 1] = garmentC * (1 - sc) + starVal * sc;
+            colBuffer[k + 2] = garmentC * (1 - sc) + starVal * sc;
           } else {
             colBuffer[k] = starVal;
             colBuffer[k + 1] = starVal;

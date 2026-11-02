@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ThemeProvider } from 'styled-components';
-import { theme } from './styles/theme';
+import { darkTheme, lightTheme } from './styles/theme';
 import { GlobalStyles } from './styles/GlobalStyles';
 import { Navbar } from './components/Navbar';
 import { Cursor } from './components/Cursor';
@@ -19,6 +19,14 @@ import { STORE_DATA } from './data/content';
 
 export const App: React.FC = () => {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const [themeMode, setThemeMode] = useState<'dark' | 'light'>(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('elohims_theme');
+      if (saved === 'light' || saved === 'dark') return saved;
+    }
+    return 'dark';
+  });
+
   const { itemCount, addItem, checkoutWhatsApp } = useCart();
   const { hasFinePointer } = useMouse();
 
@@ -29,16 +37,31 @@ export const App: React.FC = () => {
     checkoutWhatsApp(STORE_DATA.whatsAppNumber);
   };
 
+  const handleToggleTheme = () => {
+    setThemeMode((prev) => {
+      const next = prev === 'dark' ? 'light' : 'dark';
+      localStorage.setItem('elohims_theme', next);
+      return next;
+    });
+  };
+
+  const currentTheme = themeMode === 'light' ? lightTheme : darkTheme;
+
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={currentTheme}>
       <GlobalStyles />
       <Loader isReady={isLoaded} />
-      <Scene onLoaded={() => setIsLoaded(true)} />
+      <Scene
+        onLoaded={() => setIsLoaded(true)}
+        isLight={themeMode === 'light'}
+      />
       <Cursor hasFinePointer={hasFinePointer} />
       <Navbar
         brandName={STORE_DATA.brand.name}
         cartCount={itemCount}
         onCartClick={handleCartClick}
+        isLight={themeMode === 'light'}
+        onToggleTheme={handleToggleTheme}
       />
       <main>
         <HeroSection

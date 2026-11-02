@@ -20,25 +20,6 @@ const ShopContainer = styled.section`
     max-width: 1240px;
     margin-bottom: 24px;
   }
-
-  .eyebrow {
-    font-family: ${({ theme }) => theme.fonts.display};
-    letter-spacing: 0.18em;
-    font-size: 0.8rem;
-    color: ${({ theme }) => theme.colors.gold};
-    text-transform: uppercase;
-    display: inline-block;
-    margin-bottom: 8px;
-  }
-
-  p.section-sub {
-    font-size: 1rem;
-    color: #cbd5e1;
-    max-width: 50ch;
-    margin-top: 14px;
-    line-height: 1.6;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
-  }
 `;
 
 const Grid = styled.div`

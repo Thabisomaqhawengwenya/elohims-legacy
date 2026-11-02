@@ -8,14 +8,17 @@ interface LoaderProps {
 const LoadOverlay = styled.div<{ $fading: boolean }>`
   position: fixed;
   inset: 0;
-  background: ${({ theme }) => theme.colors.bg};
-  color: #ffffff;
+  background: var(--bg);
+  color: var(--text-primary);
   z-index: 200;
   display: grid;
   place-items: center;
   font-family: ${({ theme }) => theme.fonts.display};
   letter-spacing: 0.2em;
-  transition: opacity 0.8s;
+  transition:
+    opacity 0.8s,
+    background 0.3s ease,
+    color 0.3s ease;
   opacity: ${({ $fading }) => ($fading ? 0 : 1)};
   pointer-events: ${({ $fading }) => ($fading ? 'none' : 'auto')};
 `;

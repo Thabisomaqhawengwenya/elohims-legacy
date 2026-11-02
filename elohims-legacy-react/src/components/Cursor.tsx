@@ -13,14 +13,17 @@ const CursorElement = styled.div<{ $visible: boolean }>`
   height: 14px;
   margin: -7px 0 0 -7px;
   border-radius: 50%;
-  background: #ffffff;
+  background: var(--text-primary);
   box-shadow:
-    0 0 0 6px rgba(217, 200, 169, 0.25),
-    0 0 24px 6px rgba(217, 200, 169, 0.5);
+    0 0 0 6px ${({ theme }) => theme.colors.cursorInner},
+    0 0 24px 6px ${({ theme }) => theme.colors.cursorOuter};
   z-index: 99;
   pointer-events: none;
   display: ${({ $visible }) => ($visible ? 'block' : 'none')};
   will-change: transform;
+  transition:
+    background 0.3s ease,
+    box-shadow 0.3s ease;
 
   @media (max-width: 800px) {
     display: none;
@@ -49,7 +52,7 @@ export const Cursor: React.FC<CursorProps> = ({ hasFinePointer }) => {
       p.cy += (p.my - p.cy) * 0.2;
 
       if (cursorRef.current && p.moved) {
-        cursorRef.current.style.transform = `translate(${p.cx}px, ${p.cy}px)`;
+        cursorRef.current.style.transform = `translate3d(${p.cx}px, ${p.cy}px, 0)`;
       }
 
       rafId = requestAnimationFrame(updateCursor);
@@ -63,5 +66,7 @@ export const Cursor: React.FC<CursorProps> = ({ hasFinePointer }) => {
     };
   }, [hasFinePointer]);
 
-  return <CursorElement ref={cursorRef} $visible={hasFinePointer} id="cur" />;
+  if (!hasFinePointer) return null;
+
+  return <CursorElement ref={cursorRef} id="cur" $visible={true} />;
 };

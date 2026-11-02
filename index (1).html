@@ -6,16 +6,22 @@
 <title>Elohim's Legacy — Directed by Elohim</title>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#05060a;--blue:#d9c8a9;--gold:#d9c8a9}
+:root{--bg:#05060a;--text-primary:#fff;--text-secondary:#cbd5e1;--text-muted:#94a3b8;--gold:#d9c8a9;--blue:#d9c8a9;--border-light:rgba(255,255,255,.1);--border-medium:rgba(255,255,255,.25);--card-bg:#141720;--card-border:rgba(255,255,255,.12);--card-shadow:0 16px 36px rgba(0,0,0,.55);--card-text:#fff;--swatch-stage-bg:radial-gradient(circle at 50% 45%,#d8dade 0%,#b8bcc3 100%);--swatch-border:rgba(255,255,255,.1);--btn-primary-bg:#fff;--btn-primary-text:#000;--btn-hover-bg:#e2e8f0;--btn-disabled-bg:rgba(255,255,255,.05);--size-btn-bg:rgba(15,17,24,.7);--nav-bg:linear-gradient(180deg,rgba(5,6,10,.92) 0%,rgba(5,6,10,.6) 60%,transparent 100%);--footer-bg:rgba(12,15,22,.75);--footer-shadow:0 8px 30px rgba(0,0,0,.6);--outline-stroke:#fff;--heading-shadow:0 2px 14px rgba(0,0,0,.8);--cursor-color:#fff}
+body.light{--bg:#f7f6f2;--text-primary:#0f1115;--text-secondary:#475060;--text-muted:#64748b;--gold:#94763e;--blue:#94763e;--border-light:rgba(0,0,0,.08);--border-medium:rgba(0,0,0,.18);--card-bg:#ffffff;--card-border:rgba(0,0,0,.08);--card-shadow:0 12px 32px rgba(0,0,0,.06);--card-text:#0f1115;--swatch-stage-bg:radial-gradient(circle at 50% 45%,#f1f3f6 0%,#dcdfe4 100%);--swatch-border:rgba(0,0,0,.06);--btn-primary-bg:#0f1115;--btn-primary-text:#fff;--btn-hover-bg:#27272a;--btn-disabled-bg:rgba(0,0,0,.06);--size-btn-bg:rgba(255,255,255,.85);--nav-bg:linear-gradient(180deg,rgba(247,246,242,.95) 0%,rgba(247,246,242,.65) 60%,transparent 100%);--footer-bg:rgba(255,255,255,.8);--footer-shadow:0 8px 30px rgba(0,0,0,.05);--outline-stroke:#0f1115;--heading-shadow:none;--cursor-color:#0f1115}
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:#fff;font-family:Montserrat,system-ui,sans-serif;overflow-x:hidden;cursor:none}
+body{background:var(--bg);color:var(--text-primary);font-family:Montserrat,system-ui,sans-serif;overflow-x:hidden;cursor:none;transition:background .3s,color .3s}
 a,button{color:inherit;text-decoration:none;cursor:none;font-family:inherit}
 #gl{position:fixed;inset:0;width:100%;height:100%;display:block;z-index:0;pointer-events:none}
-#cur{position:fixed;left:0;top:0;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:#fff;box-shadow:0 0 0 6px rgba(217,200,169,.25),0 0 24px 6px rgba(217,200,169,.5);z-index:99;pointer-events:none}
-nav{position:fixed;top:0;left:0;right:0;z-index:10;display:flex;justify-content:space-between;align-items:center;padding:22px 6vw;font-size:.8rem}
-nav b{font-family:Anton,Impact,sans-serif;font-weight:400;letter-spacing:.12em;font-size:1.1rem}
-nav div{display:flex;gap:28px;align-items:center}
-#cart{border:1px solid #fff;background:none;border-radius:30px;padding:8px 18px;font-size:.8rem}
+#cur{position:fixed;left:0;top:0;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:var(--cursor-color);box-shadow:0 0 0 6px rgba(128,128,128,.2),0 0 24px 6px rgba(128,128,128,.3);z-index:99;pointer-events:none;transition:background .3s}
+nav{position:fixed;top:0;left:0;right:0;z-index:10;display:flex;justify-content:space-between;align-items:center;padding:22px 6vw;font-size:.8rem;background:var(--nav-bg);backdrop-filter:blur(8px);transition:background .3s}
+nav b{font-family:Anton,Impact,sans-serif;font-weight:400;letter-spacing:.12em;font-size:1.1rem;color:var(--text-primary);text-shadow:var(--heading-shadow)}
+nav div{display:flex;gap:20px;align-items:center}
+nav a{color:var(--text-primary);font-weight:600;text-shadow:var(--heading-shadow);transition:color .2s}
+nav a:hover{color:var(--gold)}
+#theme-btn{border:1.5px solid var(--border-medium);background:var(--size-btn-bg);color:var(--text-primary);border-radius:30px;padding:7px 14px;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:transform .2s,border-color .2s}
+#theme-btn:hover{transform:scale(1.04);border-color:var(--text-primary)}
+#cart{border:1.5px solid var(--border-medium);background:var(--size-btn-bg);color:var(--text-primary);border-radius:30px;padding:8px 18px;font-size:.8rem;font-weight:600;cursor:pointer;transition:background .2s,color .2s,transform .2s}
+#cart:hover{background:var(--text-primary);color:var(--bg);transform:scale(1.04)}
 main{position:relative;z-index:1}
 section{min-height:100vh;padding:0 6vw;display:flex;flex-direction:column;justify-content:center;position:relative}
 .d{font-family:Anton,Impact,sans-serif;font-weight:400;text-transform:uppercase;line-height:.94;font-size:clamp(3.4rem,11vw,10rem);text-shadow:0 4px 24px rgba(0,0,0,.95),0 2px 8px rgba(0,0,0,.9)}
@@ -67,7 +73,7 @@ p.l b{color:#fff;font-weight:600}
 <div id="load">LOADING</div>
 <canvas id="gl"></canvas>
 <div id="cur"></div>
-<nav><b>ELOHIM'S LEGACY</b><div><a href="#shop">Shop</a><a href="#contact">Contact</a><button id="cart">Cart (0)</button></div></nav>
+<nav><b>ELOHIM'S LEGACY</b><div><a href="#shop">Shop</a><a href="#contact">Contact</a><button id="theme-btn" type="button">Light</button><button id="cart">Cart (0)</button></div></nav>
 <main>
 <section><h1 class="d rv">Directed<br>by <span class="o">Elohim</span></h1>
 <p class="l rv">Forged in purpose, worn in legacy. Our oversized <b>heavyweight tee</b>, soft-washed black, with the print that says it all.</p></section>
@@ -113,7 +119,8 @@ fragmentShader:'varying vec3 vC;void main(){float d=length(gl_PointCoord-.5);if(
 const pts=new THREE.Points(g,mat);scene.add(pts);
 const bg=new Float32Array(1500*3);for(let i=0;i<1500;i++)bg.set([(R()-.5)*60,(R()-.5)*36,-8-R()*10],i*3);
 const bgG=new THREE.BufferGeometry();bgG.setAttribute('position',new THREE.BufferAttribute(bg,3));
-scene.add(new THREE.Points(bgG,new THREE.PointsMaterial({size:.06,color:0xffffff,transparent:true,opacity:.7})));
+const bgPts=new THREE.Points(bgG,new THREE.PointsMaterial({size:.06,color:0xffffff,transparent:true,opacity:.7}));
+scene.add(bgPts);
 function resize(){ren.setSize(innerWidth,innerHeight,false);cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix()}
 addEventListener('resize',resize);resize();
 const PI=Math.PI;
@@ -127,7 +134,9 @@ addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;moved=true});
 const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
 function tick(ts){const t=ts*.001;U+=(scrollY/innerHeight-U)*(reduce?1:.07);
  const[sc0,xo,ry]=kf(U),sc=ready?sc0:1;
- for(let i=0;i<N;i++){const k=i*3,sv=.85+.15*(((i*37)%10)/10);for(let j=0;j<3;j++){pos[k+j]=ready?shapeP[k+j]*(1-sc)+star[k+j]*sc:star[k+j];if(ready)col[k+j]=shapeC[k+j]*(1-sc)+sv*sc;else col[k+j]=sv}}
+ const isL=document.body.classList.contains('light');
+ bgPts.material.color.setHex(isL?0x222630:0xffffff);bgPts.material.opacity=isL?.35:.7;
+ for(let i=0;i<N;i++){const k=i*3,sv=isL?(.18+.12*(((i*37)%10)/10)):(.85+.15*(((i*37)%10)/10));for(let j=0;j<3;j++){pos[k+j]=ready?shapeP[k+j]*(1-sc)+star[k+j]*sc:star[k+j];if(ready){const gc=isL?(shapeC[k+j]>.5?.72:.18):shapeC[k+j];col[k+j]=gc*(1-sc)+sv*sc}else col[k+j]=sv}}
  g.attributes.position.needsUpdate=g.attributes.aColor.needsUpdate=true;
  px+=((mx/innerWidth-.5)-px)*.05;
  pts.position.x=xo*(innerWidth>800?1:.15)*(1-sc);pts.position.y=(innerWidth>800?0:2.2)+(reduce?0:Math.sin(t*1.1)*.2*(1-sc));
@@ -137,6 +146,21 @@ function tick(ts){const t=ts*.001;U+=(scrollY/innerHeight-U)*(reduce?1:.07);
  if(moved&&fine&&!reduce){const h=Math.tan(25*Math.PI/180)*11;mat.uniforms.uMouse.value.set((cx/innerWidth*2-1)*h*cam.aspect,-(cy/innerHeight*2-1)*h)}
  ren.render(scene,cam);requestAnimationFrame(tick)}
 requestAnimationFrame(tick);
+// Theme switcher
+const thmBtn=document.getElementById('theme-btn');
+if(thmBtn){
+  thmBtn.addEventListener('click',()=>{
+    const isL=document.body.classList.toggle('light');
+    thmBtn.textContent=isL?'Dark':'Light';
+    localStorage.setItem('elohims_theme',isL?'light':'dark');
+  });
+  if(localStorage.getItem('elohims_theme')==='light'){
+    document.body.classList.add('light');
+    thmBtn.textContent='Dark';
+  }else{
+    thmBtn.textContent='Light';
+  }
+}
 // ---- store ----
 const items=[],cartBtn=document.getElementById('cart');
 const teeCardHtml='<div class="card"><div class="sw"><div class="v-sw"><button type="button" class="act" data-v="f">Front</button><button type="button" data-v="b">Back</button></div><img id="tee-sw-img" class="sw-img" src="'+F+'" alt="Directed by Elohim Tee"></div><h4>Directed by Elohim Tee</h4><p class="specs-l">Oversized Boxy Fit · Heavyweight Cotton</p><div class="m"><span>S – XL</span><b>$25</b></div><div class="sz-row"><button type="button" class="sz-chp">S</button><button type="button" class="sz-chp on">M</button><button type="button" class="sz-chp">L</button><button type="button" class="sz-chp">XL</button></div><button class="add2" data-n="Directed by Elohim Tee" data-p="25">Add to cart · $25</button></div>';

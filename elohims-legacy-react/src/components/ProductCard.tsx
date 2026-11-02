@@ -11,22 +11,24 @@ interface ProductCardProps {
 
 const CardWrapper = styled.div<{ $soon: boolean }>`
   position: relative;
-  background: #c8cbd0;
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
   border-radius: 20px;
   padding: 16px;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45);
+  box-shadow: var(--card-shadow);
   display: flex;
   flex-direction: column;
   transition:
     transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  color: #0c0d12;
-  opacity: ${({ $soon }) => ($soon ? 0.9 : 1)};
+    box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    background 0.3s ease,
+    border-color 0.3s ease;
+  color: var(--card-text);
+  opacity: ${({ $soon }) => ($soon ? 0.85 : 1)};
 
   &:hover {
     transform: translateY(-6px);
-    box-shadow: 0 22px 48px rgba(0, 0, 0, 0.6);
+    box-shadow: var(--card-shadow);
   }
 
   h4 {
@@ -35,7 +37,7 @@ const CardWrapper = styled.div<{ $soon: boolean }>`
     letter-spacing: 0.04em;
     font-size: 1.35rem;
     text-transform: uppercase;
-    color: #0c0d12;
+    color: var(--card-text);
     line-height: 1.15;
     margin-top: 14px;
     padding: 0 2px;
@@ -43,7 +45,7 @@ const CardWrapper = styled.div<{ $soon: boolean }>`
 
   .specs-line {
     font-size: 0.8rem;
-    color: #52525b;
+    color: var(--text-muted);
     margin-top: 5px;
     padding: 0 2px;
     line-height: 1.4;
@@ -59,14 +61,14 @@ const CardWrapper = styled.div<{ $soon: boolean }>`
     .price-val {
       font-family: ${({ theme }) => theme.fonts.display};
       font-size: 1.4rem;
-      color: #0c0d12;
+      color: var(--card-text);
       font-weight: 600;
       letter-spacing: 0.02em;
     }
 
     .meta-val {
       font-size: 0.8rem;
-      color: #52525b;
+      color: var(--text-muted);
       font-weight: 600;
       letter-spacing: 0.04em;
       text-transform: uppercase;
@@ -85,8 +87,8 @@ const CardWrapper = styled.div<{ $soon: boolean }>`
     height: 44px;
     border-radius: 9999px;
     border: none;
-    background: #0c0d12;
-    color: #ffffff;
+    background: var(--btn-primary-bg);
+    color: var(--btn-primary-text);
     font-weight: 600;
     font-size: 0.86rem;
     letter-spacing: 0.06em;
@@ -97,10 +99,11 @@ const CardWrapper = styled.div<{ $soon: boolean }>`
     justify-content: center;
     transition:
       background 0.2s ease,
-      transform 0.15s ease;
+      transform 0.15s ease,
+      color 0.2s ease;
 
     &:hover:not(:disabled) {
-      background: #27272a;
+      background: var(--btn-hover-bg);
       transform: translateY(-1px);
     }
 
@@ -109,9 +112,9 @@ const CardWrapper = styled.div<{ $soon: boolean }>`
     }
 
     &:disabled {
-      background: rgba(0, 0, 0, 0.08);
-      color: #71717a;
-      border: 1px solid rgba(0, 0, 0, 0.12);
+      background: var(--btn-disabled-bg);
+      color: var(--text-muted);
+      border: 1px solid var(--border-light);
       cursor: not-allowed;
     }
 
@@ -127,9 +130,9 @@ const SizePill = styled.button<{ $active: boolean }>`
   height: 32px;
   border-radius: 9999px;
   border: 1.5px solid
-    ${({ $active }) => ($active ? '#0c0d12' : 'rgba(0, 0, 0, 0.2)')};
-  background: ${({ $active }) => ($active ? '#0c0d12' : 'transparent')};
-  color: ${({ $active }) => ($active ? '#ffffff' : '#18181b')};
+    ${({ $active }) => ($active ? 'var(--card-text)' : 'var(--border-medium)')};
+  background: ${({ $active }) => ($active ? 'var(--card-text)' : 'transparent')};
+  color: ${({ $active }) => ($active ? 'var(--bg)' : 'var(--card-text)')};
   font-size: 0.75rem;
   font-weight: ${({ $active }) => ($active ? '700' : '500')};
   cursor: pointer;
@@ -139,8 +142,9 @@ const SizePill = styled.button<{ $active: boolean }>`
     border-color 0.15s;
 
   &:hover {
-    border-color: #0c0d12;
-    background: ${({ $active }) => ($active ? '#0c0d12' : 'rgba(0, 0, 0, 0.08)')};
+    border-color: var(--card-text);
+    background: ${({ $active }) =>
+      $active ? 'var(--card-text)' : 'rgba(128, 128, 128, 0.1)'};
   }
 `;
 
@@ -152,9 +156,9 @@ const SwatchStage = styled.div<{ $isAvailable: boolean }>`
   overflow: hidden;
   background: ${({ $isAvailable }) =>
     $isAvailable
-      ? 'radial-gradient(circle at 50% 45%, #d6d9de 0%, #b8bcc3 100%)'
-      : '#b8bcc3'};
-  border: 1px solid rgba(0, 0, 0, 0.08);
+      ? 'var(--swatch-stage-bg)'
+      : 'var(--btn-disabled-bg)'};
+  border: 1px solid var(--swatch-border);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -194,7 +198,7 @@ const SwatchStage = styled.div<{ $isAvailable: boolean }>`
       font-family: ${({ theme }) => theme.fonts.display};
       font-size: 1.5rem;
       letter-spacing: 0.2em;
-      color: #52525b;
+      color: var(--text-muted);
       text-transform: uppercase;
       font-weight: 500;
     }
@@ -202,10 +206,11 @@ const SwatchStage = styled.div<{ $isAvailable: boolean }>`
     span.drop-tag {
       font-size: 0.78rem;
       letter-spacing: 0.12em;
-      color: #71717a;
+      color: var(--text-muted);
       text-transform: uppercase;
       margin-top: 6px;
       font-weight: 600;
+      opacity: 0.8;
     }
   }
 `;
@@ -215,7 +220,7 @@ const ViewToggle = styled.div`
   top: 10px;
   right: 10px;
   display: flex;
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.88);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border: 1px solid rgba(0, 0, 0, 0.12);

@@ -13,10 +13,9 @@ const BigHeading = styled.h2`
   max-width: 22ch;
   margin-left: auto;
   text-align: right;
-  color: #ffffff;
-  text-shadow:
-    0 4px 24px rgba(0, 0, 0, 0.95),
-    0 2px 8px rgba(0, 0, 0, 0.9);
+  color: var(--text-primary);
+  text-shadow: var(--heading-shadow);
+  transition: color 0.3s ease;
 
   @media (max-width: 800px) {
     margin-left: 0;
