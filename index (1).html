@@ -107,6 +107,7 @@ function sample(img,dir,off){const w=img.width,h=img.height,c=document.createEle
   if(l>.5){shapeC[k]=shapeC[k+1]=shapeC[k+2]=1}else{const q=Math.min(1,.22+l*2.4);shapeC[k]=q*.82;shapeC[k+1]=q*.8;shapeC[k+2]=q*.78}}}
 Promise.all([load(F),load(Bk)]).then(([a,b])=>{sample(a,1,0);sample(b,-1,H2);ready=true;const L=document.getElementById('load');L.style.opacity=0;setTimeout(()=>L.remove(),800)});
 const star=new Float32Array(N*3);for(let i=0;i<N;i++)star.set([(R()-.5)*34,(R()-.5)*20,(R()-.5)*18],i*3);
+const starSpd=new Float32Array(N);for(let i=0;i<N;i++)starSpd[i]=1.6+R()*1.6;
 const cv=document.getElementById('gl'),ren=new THREE.WebGLRenderer({canvas:cv,antialias:false,alpha:true});
 ren.setPixelRatio(Math.min(devicePixelRatio,2));
 const scene=new THREE.Scene(),cam=new THREE.PerspectiveCamera(50,1,.1,100);cam.position.z=11;
@@ -136,8 +137,28 @@ function tick(ts){const t=ts*.001;U+=(scrollY/innerHeight-U)*(reduce?1:.07);
  const[sc0,xo,ry]=kf(U),sc=ready?sc0:1;
  const isL=document.body.classList.contains('light');
  bgPts.material.color.setHex(isL?0x222630:0xffffff);bgPts.material.opacity=isL?.35:.7;
- for(let i=0;i<N;i++){const k=i*3,sv=isL?(.18+.12*(((i*37)%10)/10)):(.85+.15*(((i*37)%10)/10));for(let j=0;j<3;j++){pos[k+j]=ready?shapeP[k+j]*(1-sc)+star[k+j]*sc:star[k+j];if(ready){const gc=isL?(shapeC[k+j]>.5?.72:.18):shapeC[k+j];col[k+j]=gc*(1-sc)+sv*sc}else col[k+j]=sv}}
+ const span=48,halfSpan=24;
+ for(let i=0;i<N;i++){
+  const k=i*3,sv=isL?(.18+.12*(((i*37)%10)/10)):(.85+.15*(((i*37)%10)/10));
+  const spd=reduce?0:starSpd[i];
+  const rawX=star[k]-spd*t;
+  const sx=((rawX+halfSpan)%span+span)%span-halfSpan;
+  const sy=star[k+1]+(reduce?0:Math.sin(t*.8+i*.15)*.12);
+  const sz=star[k+2];
+  pos[k]=ready?shapeP[k]*(1-sc)+sx*sc:sx;
+  pos[k+1]=ready?shapeP[k+1]*(1-sc)+sy*sc:sy;
+  pos[k+2]=ready?shapeP[k+2]*(1-sc)+sz*sc:sz;
+  if(ready){const gc=isL?(shapeC[k]>.5?.72:.18):shapeC[k];col[k]=col[k+1]=col[k+2]=gc*(1-sc)+sv*sc}else col[k]=col[k+1]=col[k+2]=sv;
+ }
  g.attributes.position.needsUpdate=g.attributes.aColor.needsUpdate=true;
+ const bgArr=bgG.attributes.position.array,bgSpan=70,bgHalf=35;
+ for(let b=0;b<1500;b++){
+  const bk=b*3,bSpd=reduce?0:.75+((b*19)%10)*.08;
+  const rX=bg[bk]-bSpd*t;
+  bgArr[bk]=((rX+bgHalf)%bgSpan+bgSpan)%bgSpan-bgHalf;
+  bgArr[bk+1]=bg[bk+1]+(reduce?0:Math.sin(t*.5+b)*.08);
+ }
+ bgG.attributes.position.needsUpdate=true;
  px+=((mx/innerWidth-.5)-px)*.05;
  pts.position.x=xo*(innerWidth>800?1:.15)*(1-sc);pts.position.y=(innerWidth>800?0:2.2)+(reduce?0:Math.sin(t*1.1)*.2*(1-sc));
  pts.rotation.y=ry+px*.5;pts.rotation.x=(my/innerHeight-.5)*.15;

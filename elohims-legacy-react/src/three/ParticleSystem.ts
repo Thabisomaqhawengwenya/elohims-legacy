@@ -3,6 +3,7 @@ export interface ParticleBuffers {
   shapePositions: Float32Array;
   shapeColors: Float32Array;
   starPositions: Float32Array;
+  starSpeeds: Float32Array;
   initialSizes: Float32Array;
   backgroundPositions: Float32Array;
 }
@@ -30,6 +31,7 @@ export function buildParticleBuffers(
   const shapePositions = new Float32Array(totalParticles * 3);
   const shapeColors = new Float32Array(totalParticles * 3);
   const starPositions = new Float32Array(totalParticles * 3);
+  const starSpeeds = new Float32Array(totalParticles);
   const initialSizes = new Float32Array(totalParticles);
 
   function sampleImage(
@@ -113,12 +115,14 @@ export function buildParticleBuffers(
   sampleImage(frontImg, 1, 0);
   sampleImage(backImg, -1, half);
 
-  // Starfield positions for dispersal
+  // Starfield positions and autonomous leftward drift speeds
   for (let i = 0; i < totalParticles; i++) {
     starPositions[i * 3] = (Math.random() - 0.5) * 34;
     starPositions[i * 3 + 1] = (Math.random() - 0.5) * 20;
     starPositions[i * 3 + 2] = (Math.random() - 0.5) * 18;
 
+    // Organic leftward drift speed (units per second)
+    starSpeeds[i] = 1.6 + Math.random() * 1.6;
     initialSizes[i] = 0.5 + Math.random() * 0.4;
   }
 
@@ -135,6 +139,7 @@ export function buildParticleBuffers(
     shapePositions,
     shapeColors,
     starPositions,
+    starSpeeds,
     initialSizes,
     backgroundPositions,
   };

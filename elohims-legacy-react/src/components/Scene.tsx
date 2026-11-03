@@ -182,7 +182,10 @@ export const Scene: React.FC<SceneProps> = ({ onLoaded, isLight = false }) => {
       bgMaterial.opacity = light ? 0.35 : 0.7;
 
       if (buffers) {
-        const { shapePositions, shapeColors, starPositions } = buffers;
+        const { shapePositions, shapeColors, starPositions, starSpeeds, backgroundPositions } = buffers;
+        const span = 48;
+        const halfSpan = span * 0.5;
+
         for (let i = 0; i < totalParticles; i++) {
           const k = i * 3;
           // Synchronized R=G=B creates stardust without pastel rainbow discoloration
@@ -190,15 +193,22 @@ export const Scene: React.FC<SceneProps> = ({ onLoaded, isLight = false }) => {
             ? 0.18 + 0.12 * (((i * 37) % 10) / 10)
             : 0.85 + 0.15 * (((i * 37) % 10) / 10);
 
+          // Autonomous continuous movement to the left after particles disperse
+          const speed = isReduce ? 0 : starSpeeds[i];
+          const rawStarX = starPositions[k] - speed * t;
+          const starX = ((rawStarX + halfSpan) % span + span) % span - halfSpan;
+          const starY = starPositions[k + 1] + (isReduce ? 0 : Math.sin(t * 0.8 + i * 0.15) * 0.12);
+          const starZ = starPositions[k + 2];
+
           posBuffer[k] = isReady
-            ? shapePositions[k] * (1 - sc) + starPositions[k] * sc
-            : starPositions[k];
+            ? shapePositions[k] * (1 - sc) + starX * sc
+            : starX;
           posBuffer[k + 1] = isReady
-            ? shapePositions[k + 1] * (1 - sc) + starPositions[k + 1] * sc
-            : starPositions[k + 1];
+            ? shapePositions[k + 1] * (1 - sc) + starY * sc
+            : starY;
           posBuffer[k + 2] = isReady
-            ? shapePositions[k + 2] * (1 - sc) + starPositions[k + 2] * sc
-            : starPositions[k + 2];
+            ? shapePositions[k + 2] * (1 - sc) + starZ * sc
+            : starZ;
 
           if (isReady) {
             const origC = shapeColors[k];
@@ -215,6 +225,21 @@ export const Scene: React.FC<SceneProps> = ({ onLoaded, isLight = false }) => {
             colBuffer[k + 1] = starVal;
             colBuffer[k + 2] = starVal;
           }
+        }
+
+        // Ambient background stars gentle leftward parallax drift
+        if (backgroundPositions && bgGeometry.attributes.position) {
+          const bgArr = bgGeometry.attributes.position.array as Float32Array;
+          const bgSpan = 70;
+          const bgHalf = bgSpan * 0.5;
+          for (let b = 0; b < 1500; b++) {
+            const bk = b * 3;
+            const bgSpeed = isReduce ? 0 : 0.75 + ((b * 19) % 10) * 0.08;
+            const rawBgX = backgroundPositions[bk] - bgSpeed * t;
+            bgArr[bk] = ((rawBgX + bgHalf) % bgSpan + bgSpan) % bgSpan - bgHalf;
+            bgArr[bk + 1] = backgroundPositions[bk + 1] + (isReduce ? 0 : Math.sin(t * 0.5 + b) * 0.08);
+          }
+          bgGeometry.attributes.position.needsUpdate = true;
         }
       }
 
