@@ -3,6 +3,8 @@ import styled from 'styled-components';
 
 interface ProductSectionProps {
   onAddToCart: (name: string, price: number, size: string) => void;
+  onOpenLookbook?: (view: 'front' | 'back') => void;
+  onOpenSizeGuide?: () => void;
 }
 
 const Price = styled.div`
@@ -14,10 +16,43 @@ const Price = styled.div`
   transition: color 0.3s ease;
 `;
 
+const SizeHeader = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 16px;
+
+  span.size-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  button.guide-btn {
+    background: transparent;
+    border: none;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--gold);
+    cursor: pointer;
+    padding: 0;
+    transition: opacity 0.2s;
+
+    &:hover {
+      opacity: 0.8;
+      text-decoration: underline;
+    }
+  }
+`;
+
 const SizesContainer = styled.div`
   display: flex;
   gap: 10px;
-  margin: 16px 0;
+  margin: 10px 0 20px;
 
   button {
     width: 44px;
@@ -53,6 +88,13 @@ const SizesContainer = styled.div`
   }
 `;
 
+const ButtonRow = styled.div`
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  flex-wrap: wrap;
+`;
+
 const AddButton = styled.button`
   border: 0;
   background: var(--btn-primary-bg);
@@ -71,14 +113,35 @@ const AddButton = styled.button`
     color 0.2s;
 
   &:hover {
-    transform: scale(1.06);
+    transform: scale(1.04);
     background: var(--btn-hover-bg);
     color: var(--btn-primary-text);
   }
 `;
 
+const SecondaryButton = styled.button`
+  border: 1px solid var(--border-medium);
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  padding: 14px 26px;
+  border-radius: 40px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: var(--text-primary);
+    background: var(--card-bg);
+    transform: scale(1.02);
+  }
+`;
+
 export const ProductSection: React.FC<ProductSectionProps> = ({
   onAddToCart,
+  onOpenLookbook,
+  onOpenSizeGuide,
 }) => {
   const [selectedSize, setSelectedSize] = useState<string>('M');
   const [buttonLabel, setButtonLabel] = useState<string>('Add to cart');
@@ -103,6 +166,20 @@ export const ProductSection: React.FC<ProductSectionProps> = ({
         <b>Directed by Elohim</b> on the front, the prayer on the back.
       </p>
       <Price className="price rv">$25</Price>
+
+      <div className="rv">
+        <SizeHeader>
+          <span className="size-label">Select Size</span>
+          <button
+            type="button"
+            className="guide-btn"
+            onClick={() => onOpenSizeGuide?.()}
+          >
+            Size & Fit Guide ↗
+          </button>
+        </SizeHeader>
+      </div>
+
       <SizesContainer className="sizes rv">
         {sizes.map((size) => (
           <button
@@ -115,7 +192,8 @@ export const ProductSection: React.FC<ProductSectionProps> = ({
           </button>
         ))}
       </SizesContainer>
-      <div className="rv">
+
+      <ButtonRow className="rv">
         <AddButton
           type="button"
           className="add"
@@ -125,7 +203,13 @@ export const ProductSection: React.FC<ProductSectionProps> = ({
         >
           {buttonLabel}
         </AddButton>
-      </div>
+        <SecondaryButton
+          type="button"
+          onClick={() => onOpenLookbook?.('front')}
+        >
+          Inspect Macro View ⌕
+        </SecondaryButton>
+      </ButtonRow>
     </section>
   );
 };

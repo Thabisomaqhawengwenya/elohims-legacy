@@ -7,6 +7,9 @@ import { Product } from '../data/content';
 interface ProductCardProps {
   product: Product;
   onAddToCart: (name: string, price: number, size: string) => void;
+  onOpenLookbook?: (view: 'front' | 'back') => void;
+  onOpenSizeGuide?: () => void;
+  onOpenWaitlist?: (productName: string) => void;
 }
 
 const CardWrapper = styled.div<{ $soon: boolean }>`
@@ -75,10 +78,43 @@ const CardWrapper = styled.div<{ $soon: boolean }>`
     }
   }
 
+  .size-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 14px;
+
+    span.lbl {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    button.guide-link {
+      background: transparent;
+      border: none;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: var(--gold);
+      cursor: pointer;
+      padding: 0;
+      text-transform: uppercase;
+      transition: opacity 0.2s;
+
+      &:hover {
+        opacity: 0.8;
+        text-decoration: underline;
+      }
+    }
+  }
+
   .size-picker {
     display: flex;
     gap: 6px;
-    margin-top: 12px;
+    margin-top: 6px;
   }
 
   button.action-btn {
@@ -100,7 +136,8 @@ const CardWrapper = styled.div<{ $soon: boolean }>`
     transition:
       background 0.2s ease,
       transform 0.15s ease,
-      color 0.2s ease;
+      color 0.2s ease,
+      border-color 0.2s ease;
 
     &:hover:not(:disabled) {
       background: var(--btn-hover-bg);
@@ -109,6 +146,20 @@ const CardWrapper = styled.div<{ $soon: boolean }>`
 
     &:active:not(:disabled) {
       transform: scale(0.98);
+    }
+
+    &.waitlist-btn {
+      background: var(--bg-surface);
+      border: 1.5px solid var(--border-medium);
+      color: var(--text-primary);
+      cursor: pointer;
+
+      &:hover {
+        background: var(--text-primary);
+        color: var(--bg);
+        border-color: var(--text-primary);
+        transform: translateY(-2px);
+      }
     }
 
     &:disabled {
@@ -259,6 +310,9 @@ const ViewToggle = styled.div`
 export const ProductCard: React.FC<ProductCardProps> = ({
   product,
   onAddToCart,
+  onOpenLookbook,
+  onOpenSizeGuide,
+  onOpenWaitlist,
 }) => {
   const [activeView, setActiveView] = useState<'front' | 'back'>('front');
   const [selectedSize, setSelectedSize] = useState<string>('M');
@@ -304,9 +358,24 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               >
                 Back
               </button>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onOpenLookbook?.(activeView);
+                }}
+                title="Inspect Garment in Macro Studio"
+              >
+                Zoom ⌕
+              </button>
             </ViewToggle>
 
-            <div className="garment-wrapper">
+            <div
+              className="garment-wrapper"
+              onClick={() => onOpenLookbook?.(activeView)}
+              style={{ cursor: 'pointer' }}
+              title="Click to zoom in macro studio"
+            >
               <img
                 src={activeView === 'front' ? frontImgUrl : backImgUrl}
                 alt={`${product.name} - ${activeView === 'front' ? 'Front' : 'Back'}`}
@@ -338,32 +407,51 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       </div>
 
       {isAvailable && (
-        <div className="size-picker">
-          {availableSizes.map((size) => (
-            <SizePill
-              key={size}
+        <>
+          <div className="size-header-row">
+            <span className="lbl">Select Size</span>
+            <button
               type="button"
-              $active={selectedSize === size}
-              onClick={() => setSelectedSize(size)}
+              className="guide-link"
+              onClick={() => onOpenSizeGuide?.()}
             >
-              {size}
-            </SizePill>
-          ))}
-        </div>
+              Size Guide ↗
+            </button>
+          </div>
+          <div className="size-picker">
+            {availableSizes.map((size) => (
+              <SizePill
+                key={size}
+                type="button"
+                $active={selectedSize === size}
+                onClick={() => setSelectedSize(size)}
+              >
+                {size}
+              </SizePill>
+            ))}
+          </div>
+        </>
       )}
 
-      <button
-        type="button"
-        disabled={!isAvailable}
-        onClick={handleAdd}
-        className={`action-btn ${isAvailable ? 'add2' : ''} ${isAdded ? 'added' : ''}`}
-      >
-        {isAvailable
-          ? isAdded
+      {isAvailable ? (
+        <button
+          type="button"
+          onClick={handleAdd}
+          className={`action-btn add2 ${isAdded ? 'added' : ''}`}
+        >
+          {isAdded
             ? `Added (${selectedSize}) ✓`
-            : `Add to cart · $${product.price}`
-          : 'Coming Soon'}
-      </button>
+            : `Add to cart · $${product.price}`}
+        </button>
+      ) : (
+        <button
+          type="button"
+          onClick={() => onOpenWaitlist?.(product.name)}
+          className="action-btn waitlist-btn"
+        >
+          VIP Drop Access ↗
+        </button>
+      )}
     </CardWrapper>
   );
 };

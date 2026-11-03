@@ -6,6 +6,9 @@ import { Product } from '../../data/content';
 interface ShopSectionProps {
   products: Product[];
   onAddToCart: (name: string, price: number, size: string) => void;
+  onOpenLookbook?: (view: 'front' | 'back') => void;
+  onOpenSizeGuide?: () => void;
+  onOpenWaitlist?: (productName: string) => void;
 }
 
 const ShopContainer = styled.section`
@@ -42,6 +45,9 @@ const Grid = styled.div`
 export const ShopSection: React.FC<ShopSectionProps> = ({
   products,
   onAddToCart,
+  onOpenLookbook,
+  onOpenSizeGuide,
+  onOpenWaitlist,
 }) => {
   return (
     <ShopContainer id="shop">
@@ -57,6 +63,9 @@ export const ShopSection: React.FC<ShopSectionProps> = ({
             key={product.id}
             product={product}
             onAddToCart={onAddToCart}
+            onOpenLookbook={onOpenLookbook}
+            onOpenSizeGuide={onOpenSizeGuide}
+            onOpenWaitlist={onOpenWaitlist}
           />
         ))}
       </Grid>

@@ -12,6 +12,10 @@ import { BackPrintSection } from './components/sections/BackPrintSection';
 import { ProductSection } from './components/sections/ProductSection';
 import { ShopSection } from './components/sections/ShopSection';
 import { ContactSection } from './components/sections/ContactSection';
+import { CartDrawer } from './components/CartDrawer';
+import { SizeGuideModal } from './components/SizeGuideModal';
+import { LookbookModal } from './components/LookbookModal';
+import { WaitlistModal } from './components/WaitlistModal';
 import { useCart } from './hooks/useCart';
 import { useMouse } from './hooks/useMouse';
 import { useReveal } from './hooks/useReveal';
@@ -27,14 +31,30 @@ export const App: React.FC = () => {
     return 'dark';
   });
 
-  const { itemCount, addItem, checkoutWhatsApp } = useCart();
+  // Modal / Drawer States
+  const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
+  const [isSizeGuideOpen, setIsSizeGuideOpen] = useState<boolean>(false);
+  const [lookbookView, setLookbookView] = useState<'front' | 'back' | null>(null);
+  const [waitlistProduct, setWaitlistProduct] = useState<string | null>(null);
+
+  const {
+    items,
+    itemCount,
+    subtotal,
+    addItem,
+    updateQuantity,
+    removeItem,
+    checkoutWhatsApp,
+  } = useCart();
+
   const { hasFinePointer } = useMouse();
 
   // Scroll-reveal IntersectionObserver trigger
   useReveal();
 
-  const handleCartClick = () => {
-    checkoutWhatsApp(STORE_DATA.whatsAppNumber);
+  const handleAddToCart = (name: string, price: number, size: string) => {
+    addItem(name, price, size);
+    setIsCartOpen(true);
   };
 
   const handleToggleTheme = () => {
@@ -59,7 +79,7 @@ export const App: React.FC = () => {
       <Navbar
         brandName={STORE_DATA.brand.name}
         cartCount={itemCount}
-        onCartClick={handleCartClick}
+        onCartClick={() => setIsCartOpen(true)}
         isLight={themeMode === 'light'}
         onToggleTheme={handleToggleTheme}
       />
@@ -71,13 +91,53 @@ export const App: React.FC = () => {
         />
         <StatementSection statement={STORE_DATA.brand.statement} />
         <BackPrintSection />
-        <ProductSection onAddToCart={addItem} />
+        <ProductSection
+          onAddToCart={handleAddToCart}
+          onOpenLookbook={(view) => setLookbookView(view)}
+          onOpenSizeGuide={() => setIsSizeGuideOpen(true)}
+        />
         <ShopSection
           products={STORE_DATA.catalog}
-          onAddToCart={addItem}
+          onAddToCart={handleAddToCart}
+          onOpenLookbook={(view) => setLookbookView(view)}
+          onOpenSizeGuide={() => setIsSizeGuideOpen(true)}
+          onOpenWaitlist={(productName) => setWaitlistProduct(productName)}
         />
         <ContactSection email={STORE_DATA.contact.email} />
       </main>
+
+      {/* Slide-Over Cart Drawer with Zimbabwe trust badges */}
+      <CartDrawer
+        isOpen={isCartOpen}
+        onClose={() => setIsCartOpen(false)}
+        items={items}
+        subtotal={subtotal}
+        onUpdateQuantity={updateQuantity}
+        onRemoveItem={removeItem}
+        onCheckout={(options) => {
+          checkoutWhatsApp(STORE_DATA.whatsAppNumber, options);
+        }}
+      />
+
+      {/* Streetwear Sizing Table Modal */}
+      <SizeGuideModal
+        isOpen={isSizeGuideOpen}
+        onClose={() => setIsSizeGuideOpen(false)}
+      />
+
+      {/* Macro Studio Inspection Modal */}
+      <LookbookModal
+        isOpen={lookbookView !== null}
+        initialView={lookbookView ?? 'front'}
+        onClose={() => setLookbookView(null)}
+      />
+
+      {/* VIP Capsule Drop Waitlist Modal */}
+      <WaitlistModal
+        isOpen={waitlistProduct !== null}
+        productName={waitlistProduct ?? ''}
+        onClose={() => setWaitlistProduct(null)}
+      />
     </ThemeProvider>
   );
 };
