@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { ThemeProvider } from 'styled-components';
 import { darkTheme, lightTheme } from './styles/theme';
 import { GlobalStyles } from './styles/GlobalStyles';
 import { Navbar } from './components/Navbar';
 import { Cursor } from './components/Cursor';
-import { Scene } from './components/Scene';
+// Three.js + the 3D tee load in their own chunk so the page shell (and admin) paint first
+const Scene = lazy(() =>
+  import('./components/Scene').then((m) => ({ default: m.Scene }))
+);
 import { Loader } from './components/Loader';
 import { PromoBanner } from './components/PromoBanner';
 import { HeroSection } from './components/sections/HeroSection';
@@ -121,10 +124,12 @@ export const App: React.FC = () => {
 
       {/* 3D WebGL Scene only runs on Storefront */}
       {currentView === 'store' && (
-        <Scene
-          onLoaded={() => setIsLoaded(true)}
-          isLight={themeMode === 'light'}
-        />
+        <Suspense fallback={null}>
+          <Scene
+            onLoaded={() => setIsLoaded(true)}
+            isLight={themeMode === 'light'}
+          />
+        </Suspense>
       )}
 
       <Cursor hasFinePointer={hasFinePointer} />
