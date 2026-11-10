@@ -7,6 +7,7 @@ interface NavbarProps {
   onCartClick: () => void;
   isLight: boolean;
   onToggleTheme: () => void;
+  onAdminClick?: () => void;
 }
 
 const Nav = styled.nav`
@@ -128,6 +129,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onCartClick,
   isLight,
   onToggleTheme,
+  onAdminClick,
 }) => {
   return (
     <Nav>
@@ -135,6 +137,16 @@ export const Navbar: React.FC<NavbarProps> = ({
       <div className="nav-actions">
         <a href="#shop">Shop</a>
         <a href="#contact">Contact</a>
+        <a
+          href="#admin"
+          onClick={(e) => {
+            e.preventDefault();
+            onAdminClick?.();
+          }}
+          title="Studio Merch Command & Admin"
+        >
+          Admin
+        </a>
         <ThemeToggleBtn
           onClick={onToggleTheme}
           type="button"

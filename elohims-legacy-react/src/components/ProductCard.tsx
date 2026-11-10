@@ -12,7 +12,7 @@ interface ProductCardProps {
   onOpenWaitlist?: (productName: string) => void;
 }
 
-const CardWrapper = styled.div<{ $soon: boolean }>`
+const CardWrapper = styled.div<{ $soon: boolean; $outOfStock: boolean }>`
   position: relative;
   background: var(--card-bg);
   border: 1px solid var(--card-border);
@@ -27,11 +27,62 @@ const CardWrapper = styled.div<{ $soon: boolean }>`
     background 0.3s ease,
     border-color 0.3s ease;
   color: var(--card-text);
-  opacity: ${({ $soon }) => ($soon ? 0.85 : 1)};
+  opacity: ${({ $soon, $outOfStock }) => ($soon ? 0.88 : $outOfStock ? 0.8 : 1)};
 
   &:hover {
     transform: translateY(-6px);
     box-shadow: var(--card-shadow);
+  }
+
+  .badge-row {
+    position: absolute;
+    top: 26px;
+    left: 26px;
+    display: flex;
+    gap: 6px;
+    z-index: 6;
+    flex-wrap: wrap;
+
+    span.status-pill {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 9999px;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+
+      &.in-stock {
+        background: rgba(34, 197, 94, 0.9);
+        color: #ffffff;
+        box-shadow: 0 2px 8px rgba(34, 197, 94, 0.3);
+
+        &::before {
+          content: '';
+          width: 5px;
+          height: 5px;
+          border-radius: 50%;
+          background: #ffffff;
+        }
+      }
+
+      &.out-of-stock {
+        background: rgba(239, 68, 68, 0.9);
+        color: #ffffff;
+        box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+      }
+
+      &.promo-tag {
+        background: var(--gold);
+        color: #0c0d12;
+        font-weight: 800;
+        box-shadow: 0 2px 8px rgba(217, 200, 169, 0.3);
+      }
+    }
   }
 
   h4 {
@@ -61,12 +112,30 @@ const CardWrapper = styled.div<{ $soon: boolean }>`
     margin-top: 10px;
     padding: 0 2px;
 
-    .price-val {
-      font-family: ${({ theme }) => theme.fonts.display};
-      font-size: 1.4rem;
-      color: var(--card-text);
-      font-weight: 600;
-      letter-spacing: 0.02em;
+    .price-group {
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+
+      .price-val {
+        font-family: ${({ theme }) => theme.fonts.display};
+        font-size: 1.4rem;
+        color: var(--card-text);
+        font-weight: 600;
+        letter-spacing: 0.02em;
+
+        &.sale {
+          color: var(--gold);
+        }
+      }
+
+      .orig-price {
+        font-family: ${({ theme }) => theme.fonts.display};
+        font-size: 1rem;
+        color: var(--text-muted);
+        text-decoration: line-through;
+        opacity: 0.7;
+      }
     }
 
     .meta-val {
@@ -159,6 +228,18 @@ const CardWrapper = styled.div<{ $soon: boolean }>`
         color: var(--bg);
         border-color: var(--text-primary);
         transform: translateY(-2px);
+      }
+    }
+
+    &.out-btn {
+      background: var(--bg-surface);
+      border: 1.5px solid var(--border-medium);
+      color: var(--text-muted);
+      cursor: pointer;
+
+      &:hover {
+        border-color: var(--text-primary);
+        color: var(--text-primary);
       }
     }
 
@@ -318,8 +399,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const [selectedSize, setSelectedSize] = useState<string>('M');
   const [isAdded, setIsAdded] = useState<boolean>(false);
 
-  const isAvailable = product.status === 'available';
-  const availableSizes = ['S', 'M', 'L', 'XL'] as const;
+  const isAvailable = product.status === 'available' || product.status === 'in_stock';
+  const isOutOfStock = product.status === 'out_of_stock';
+  const isSoon = product.status === 'soon';
+  const availableSizes = product.sizes && product.sizes.length > 0 ? product.sizes : ['S', 'M', 'L', 'XL'];
+
+  const hasDiscount = Boolean(product.originalPrice && product.price && product.originalPrice > product.price);
 
   const handleAdd = () => {
     if (!isAvailable || product.price === null) return;
@@ -331,9 +416,31 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   };
 
   return (
-    <CardWrapper $soon={!isAvailable} className="card">
-      <SwatchStage $isAvailable={isAvailable} className="sw">
-        {isAvailable ? (
+    <CardWrapper
+      $soon={isSoon}
+      $outOfStock={isOutOfStock}
+      className="card"
+    >
+      <div className="badge-row">
+        {isAvailable && (
+          <span className="status-pill in-stock">
+            In Stock
+          </span>
+        )}
+        {isOutOfStock && (
+          <span className="status-pill out-of-stock">
+            Out of Stock
+          </span>
+        )}
+        {product.promoBadge && (
+          <span className="status-pill promo-tag">
+            {product.promoBadge}
+          </span>
+        )}
+      </div>
+
+      <SwatchStage $isAvailable={isAvailable || isOutOfStock} className="sw">
+        {isAvailable || isOutOfStock ? (
           <>
             <ViewToggle>
               <button
@@ -393,16 +500,19 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
       <h4>{product.name}</h4>
 
-      {isAvailable && (
-        <p className="specs-line">
-          Oversized Boxy Fit · Heavyweight Cotton
-        </p>
-      )}
+      <p className="specs-line">
+        {product.specs || (isSoon ? 'Capsule Collection · Limited Run' : 'Oversized Boxy Fit · Heavyweight Cotton')}
+      </p>
 
       <div className="price-row">
-        <span className="price-val">
-          {product.price !== null ? `$${product.price}` : '—'}
-        </span>
+        <div className="price-group">
+          <span className={`price-val ${hasDiscount ? 'sale' : ''}`}>
+            {product.price !== null ? `$${product.price}` : '—'}
+          </span>
+          {hasDiscount && (
+            <span className="orig-price">${product.originalPrice}</span>
+          )}
+        </div>
         <span className="meta-val">{product.meta}</span>
       </div>
 
@@ -442,6 +552,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           {isAdded
             ? `Added (${selectedSize}) ✓`
             : `Add to cart · $${product.price}`}
+        </button>
+      ) : isOutOfStock ? (
+        <button
+          type="button"
+          onClick={() => onOpenWaitlist?.(`${product.name} (Restock Alert)`)}
+          className="action-btn out-btn"
+        >
+          Sold Out · Notify Restock ↗
         </button>
       ) : (
         <button

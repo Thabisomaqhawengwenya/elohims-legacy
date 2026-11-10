@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 interface ContactSectionProps {
   email: string;
+  onAdminClick?: () => void;
 }
 
 const Mail = styled.div`
@@ -68,7 +69,7 @@ const Foot = styled.div`
   }
 `;
 
-export const ContactSection: React.FC<ContactSectionProps> = ({ email }) => {
+export const ContactSection: React.FC<ContactSectionProps> = ({ email, onAdminClick }) => {
   return (
     <section id="contact">
       <Mail className="mail rv">
@@ -118,6 +119,26 @@ export const ContactSection: React.FC<ContactSectionProps> = ({ email }) => {
           Forged in Purpose,
           <br />
           Worn in Legacy
+          <br />
+          <button
+            type="button"
+            onClick={onAdminClick}
+            style={{
+              background: 'transparent',
+              border: 'none',
+              padding: 0,
+              marginTop: '8px',
+              color: 'var(--gold)',
+              fontSize: '0.72rem',
+              fontWeight: 700,
+              letterSpacing: '0.06em',
+              textTransform: 'uppercase',
+              cursor: 'pointer',
+              opacity: 0.8,
+            }}
+          >
+            Studio Admin Command ↗
+          </button>
         </div>
       </Foot>
     </section>

@@ -1,18 +1,51 @@
+export type ProductStatus = 'available' | 'in_stock' | 'out_of_stock' | 'soon';
+
 export interface Product {
   id: string;
   name: string;
-  // TODO: Verify pricing before launching public sales
   price: number | null;
+  originalPrice?: number | null;
   sizes: string[];
-  status: 'available' | 'soon';
+  status: ProductStatus;
+  category?: string;
+  specs?: string;
+  promoBadge?: string;
   image?: string;
   meta: string;
+  description?: string;
+  inStockCount?: number;
+}
+
+export interface StorePromotion {
+  enabled: boolean;
+  bannerText: string;
+  code?: string;
+  discountPercent?: number;
+}
+
+export interface StoreSettings {
+  whatsAppNumber: string;
+  email: string;
+  deliveryNotice: string;
 }
 
 export interface SocialLink {
   platform: string;
   url: string;
 }
+
+export const INITIAL_PROMOTION: StorePromotion = {
+  enabled: true,
+  bannerText: 'NATIONWIDE DROP: HARARE SAME-DAY & SWIFT COURIER CONNECT ACROSS ZIMBABWE',
+  code: 'LEGACY10',
+  discountPercent: 10,
+};
+
+export const INITIAL_SETTINGS: StoreSettings = {
+  whatsAppNumber: '263000000000',
+  email: 'hello@elohimslegacy.com',
+  deliveryNotice: 'Harare Same-Day Dispatch · Swift / Courier Connect Nationwide',
+};
 
 export const STORE_DATA = {
   brand: {
@@ -40,10 +73,13 @@ export const STORE_DATA = {
   featuredProduct: {
     id: 'directed-by-elohim-tee',
     name: 'Directed by Elohim Tee',
-    // TODO: Verify pricing before launching public sales
     price: 25,
+    originalPrice: 30,
+    promoBadge: 'SIGNATURE PIECE',
     sizes: ['S', 'M', 'L', 'XL'] as const,
     defaultSize: 'M' as const,
+    category: 'T-Shirt',
+    specs: 'Oversized Boxy Fit · 280 GSM Cotton · Drop Shoulder',
     description:
       'Oversized boxy fit, drop shoulder, soft-washed heavyweight cotton. Directed by Elohim on the front, the prayer on the back.',
   },
@@ -52,52 +88,57 @@ export const STORE_DATA = {
     {
       id: 'directed-by-elohim-tee',
       name: 'Directed by Elohim Tee',
-      // TODO: Verify pricing before launching public sales
       price: 25,
+      originalPrice: 30,
       sizes: ['S', 'M', 'L', 'XL'],
-      status: 'available',
+      status: 'in_stock',
+      category: 'T-Shirt',
+      specs: 'Oversized Boxy Fit · 280 GSM Cotton',
+      promoBadge: 'DROP 01',
       meta: 'S – XL',
+      inStockCount: 35,
+      description:
+        'Oversized boxy fit, drop shoulder, soft-washed heavyweight cotton. Directed by Elohim on the front, Matthew 6:9-13 prayer on the back.',
     },
     {
       id: 'sweaters',
       name: 'Sweaters',
-      // TODO: Verify pricing before launching public sales
       price: null,
-      sizes: [],
+      sizes: ['S', 'M', 'L', 'XL'],
       status: 'soon',
+      category: 'Sweater',
+      specs: '380 GSM Heavy Fleece · Dropped Seams',
       meta: 'Next drop',
+      description: 'Pre-shrunk luxury heavyweight crewneck fleece with custom embroidered typography.',
     },
     {
       id: 'hoodies',
       name: 'Hoodies',
-      // TODO: Verify pricing before launching public sales
       price: null,
-      sizes: [],
+      sizes: ['S', 'M', 'L', 'XL'],
       status: 'soon',
+      category: 'Hoodie',
+      specs: '420 GSM French Terry · Double Layer Hood',
       meta: 'Next drop',
+      description: 'Custom double-layered hood with kangaroo pocket and high-density script embroidery.',
     },
   ] as Product[],
 
   contact: {
-    // TODO: Replace with live contact/support email address
     email: 'hello@elohimslegacy.com',
     orders: {
       title: 'Orders',
-      // TODO: Update WhatsApp order instructions if checkout mechanism changes
       text: 'Order via WhatsApp\nDelivery across Zimbabwe',
     },
     social: {
       title: 'Social',
-      // TODO: Update social media URLs with live profile links
       platforms: ['Instagram', 'TikTok', 'Facebook'],
     },
     footerBrand: {
       title: "Elohim's Legacy",
-      // TODO: Update brand mission and copyright notice
       text: 'Forged in Purpose,\nWorn in Legacy',
     },
   },
 
-  // TODO: Replace with official Elohim's Legacy WhatsApp business phone number (currently placeholder +263000000000)
   whatsAppNumber: '263000000000',
 } as const;
