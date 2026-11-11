@@ -9,7 +9,7 @@ import {
   INITIAL_SETTINGS,
 } from '../data/content';
 
-const CATALOG_STORAGE_KEY = 'elohims_catalog_v4';
+const CATALOG_STORAGE_KEY = 'elohims_catalog_v5';
 const PROMO_STORAGE_KEY = 'elohims_promo_v1';
 const SETTINGS_STORAGE_KEY = 'elohims_settings_v1';
 
