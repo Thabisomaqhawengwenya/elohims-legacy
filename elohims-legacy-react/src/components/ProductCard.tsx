@@ -354,11 +354,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         $isAvailable={isAvailable || isOutOfStock}
         className="sw"
         onClick={() => {
-          if (isTee) {
-            handleToggleView();
-          }
+          onOpenLookbook?.(activeView, product);
         }}
-        title={isTee ? `Click garment or button to view ${activeView === 'front' ? 'back' : 'front'}` : undefined}
+        title={`Click to view ${product.name} showcase`}
       >
         {isAvailable || isOutOfStock ? (
           <>
@@ -366,7 +364,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             {isTee && (
               <FlipButton
                 type="button"
-                onClick={handleToggleView}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleToggleView();
+                }}
                 title={`Switch to ${activeView === 'front' ? 'back' : 'front'} view`}
               >
                 <span>{activeView === 'front' ? 'Back ⟲' : 'Front ⟲'}</span>
@@ -380,7 +381,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                 e.stopPropagation();
                 onOpenLookbook?.(activeView, product);
               }}
-              title="Inspect Garment in Macro Studio"
+              title="Quick View & Garment Showcase"
             >
               ⌕
             </ZoomPill>
@@ -394,7 +395,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             </div>
           </>
         ) : (
-          <div className="placeholder-box">
+          <div
+            className="placeholder-box"
+            onClick={() => onOpenLookbook?.(activeView, product)}
+          >
             <span className="soon-tag">Coming Soon</span>
             <span className="drop-tag">Next Drop</span>
           </div>
@@ -403,7 +407,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
       <CardBody>
         <div className="title-price-row">
-          <h4>{product.name}</h4>
+          <h4
+            onClick={() => onOpenLookbook?.(activeView, product)}
+            style={{ cursor: 'pointer' }}
+          >
+            {product.name}
+          </h4>
           <div className="price-box">
             <span className="price">
               {product.price !== null ? `$${product.price}` : '—'}

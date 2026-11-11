@@ -216,6 +216,9 @@ export const App: React.FC = () => {
             initialView={lookbookView ?? 'front'}
             product={lookbookProduct}
             onClose={() => { setLookbookView(null); setLookbookProduct(null); }}
+            onAddToCart={handleAddToCart}
+            onOpenSizeGuide={() => setIsSizeGuideOpen(true)}
+            onOpenWaitlist={(name) => setWaitlistProduct(name)}
           />
 
           {/* VIP Capsule Drop Waitlist Modal */}
