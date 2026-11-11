@@ -21,6 +21,7 @@ import { SizeGuideModal } from './components/SizeGuideModal';
 import { LookbookModal } from './components/LookbookModal';
 import { WaitlistModal } from './components/WaitlistModal';
 import { AdminPage } from './components/Admin/AdminPage';
+import { MerchArchivePage } from './components/MerchArchivePage';
 import { useCart } from './hooks/useCart';
 import { useCatalog } from './hooks/useCatalog';
 import { useMouse } from './hooks/useMouse';
@@ -38,9 +39,10 @@ export const App: React.FC = () => {
   });
 
   // View state: 'store' or 'admin'
-  const [currentView, setCurrentView] = useState<'store' | 'admin'>(() => {
-    if (typeof window !== 'undefined' && window.location.hash === '#admin') {
-      return 'admin';
+  const [currentView, setCurrentView] = useState<'store' | 'admin' | 'merch'>(() => {
+    if (typeof window !== 'undefined') {
+      if (window.location.hash === '#admin') return 'admin';
+      if (window.location.hash === '#merch') return 'merch';
     }
     return 'store';
   });
@@ -50,6 +52,8 @@ export const App: React.FC = () => {
     const handleHashChange = () => {
       if (window.location.hash === '#admin') {
         setCurrentView('admin');
+      } else if (window.location.hash === '#merch') {
+        setCurrentView('merch');
       } else {
         setCurrentView('store');
       }
@@ -58,11 +62,15 @@ export const App: React.FC = () => {
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
 
-  const navigateToView = (view: 'store' | 'admin') => {
+  const navigateToView = (view: 'store' | 'admin' | 'merch') => {
     setCurrentView(view);
     if (view === 'admin') {
       window.location.hash = '#admin';
+    } else if (view === 'merch') {
+      window.location.hash = '#merch';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
+      window.location.hash = '';
       window.history.pushState('', document.title, window.location.pathname + window.location.search);
     }
   };
@@ -151,11 +159,61 @@ export const App: React.FC = () => {
           isLight={themeMode === 'light'}
           onToggleTheme={handleToggleTheme}
         />
+      ) : currentView === 'merch' ? (
+        <>
+          <MerchArchivePage
+            products={products}
+            promotion={promotion}
+            onAddToCart={handleAddToCart}
+            onOpenLookbook={(view, product) => { setLookbookProduct(product ?? null); setLookbookView(view); }}
+            onOpenSizeGuide={() => setIsSizeGuideOpen(true)}
+            onOpenWaitlist={(productName) => setWaitlistProduct(productName)}
+            onBackToStore={() => navigateToView('store')}
+            onCartClick={() => setIsCartOpen(true)}
+            cartCount={itemCount}
+            isLight={themeMode === 'light'}
+            onToggleTheme={handleToggleTheme}
+          />
+
+          <CartDrawer
+            isOpen={isCartOpen}
+            onClose={() => setIsCartOpen(false)}
+            items={items}
+            subtotal={subtotal}
+            onUpdateQuantity={updateQuantity}
+            onRemoveItem={removeItem}
+            onCheckout={(options) => {
+              checkoutWhatsApp(settings.whatsAppNumber || STORE_DATA.whatsAppNumber, options);
+            }}
+          />
+
+          <SizeGuideModal
+            isOpen={isSizeGuideOpen}
+            onClose={() => setIsSizeGuideOpen(false)}
+          />
+
+          <LookbookModal
+            isOpen={lookbookView !== null}
+            initialView={lookbookView ?? 'front'}
+            product={lookbookProduct}
+            onClose={() => { setLookbookView(null); setLookbookProduct(null); }}
+            onAddToCart={handleAddToCart}
+            onOpenSizeGuide={() => setIsSizeGuideOpen(true)}
+            onOpenWaitlist={(name) => setWaitlistProduct(name)}
+          />
+
+          <WaitlistModal
+            isOpen={waitlistProduct !== null}
+            productName={waitlistProduct ?? ''}
+            onClose={() => setWaitlistProduct(null)}
+          />
+        </>
       ) : (
         <>
           <PromoBanner
             promotion={promotion}
             onAdminClick={() => navigateToView('admin')}
+            onMerchClick={() => navigateToView('merch')}
           />
           <Navbar
             brandName={STORE_DATA.brand.name}
@@ -184,6 +242,7 @@ export const App: React.FC = () => {
               onOpenLookbook={(view, product) => { setLookbookProduct(product ?? null); setLookbookView(view); }}
               onOpenSizeGuide={() => setIsSizeGuideOpen(true)}
               onOpenWaitlist={(productName) => setWaitlistProduct(productName)}
+              onNavigateToMerch={() => navigateToView('merch')}
             />
             <ContactSection
               email={settings.email || STORE_DATA.contact.email}

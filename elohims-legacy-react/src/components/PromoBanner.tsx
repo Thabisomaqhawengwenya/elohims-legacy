@@ -5,6 +5,7 @@ import { StorePromotion } from '../data/content';
 interface PromoBannerProps {
   promotion: StorePromotion;
   onAdminClick?: () => void;
+  onMerchClick?: () => void;
 }
 
 const BannerContainer = styled.aside`

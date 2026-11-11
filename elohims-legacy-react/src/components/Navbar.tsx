@@ -8,6 +8,7 @@ interface NavbarProps {
   isLight: boolean;
   onToggleTheme: () => void;
   onAdminClick?: () => void;
+  onMerchClick?: () => void;
 }
 
 const Nav = styled.nav`
@@ -130,12 +131,23 @@ export const Navbar: React.FC<NavbarProps> = ({
   isLight,
   onToggleTheme,
   onAdminClick,
+  onMerchClick,
 }) => {
   return (
     <Nav>
       <b>{brandName}</b>
       <div className="nav-actions">
         <a href="#shop">Shop</a>
+        <a
+          href="#merch"
+          onClick={(e) => {
+            e.preventDefault();
+            onMerchClick?.();
+          }}
+          title="All Merchandise Archive"
+        >
+          All Merch
+        </a>
         <a href="#contact">Contact</a>
         <a
           href="#admin"

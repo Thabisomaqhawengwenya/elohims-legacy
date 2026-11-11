@@ -20,40 +20,46 @@ const CardWrapper = styled.div<{ $soon: boolean; $outOfStock: boolean }>`
   flex-direction: column;
   width: 100%;
   color: var(--card-text);
-  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  background: rgba(15, 17, 23, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 44px;
+  padding: 12px 12px 18px 12px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+  transition:
+    transform 0.28s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.25s ease,
+    box-shadow 0.28s ease;
   opacity: ${({ $soon, $outOfStock }) => ($soon ? 0.92 : $outOfStock ? 0.85 : 1)};
 
   &:hover {
-    transform: translateY(-4px);
+    transform: translateY(-5px);
+    border-color: rgba(215, 152, 114, 0.4);
+    box-shadow: 0 24px 50px rgba(0, 0, 0, 0.55);
   }
 `;
 
-/* Squircle Garment Image Stage inspired by Reference Image */
+/* Squircle Garment Image Stage matching Studio Lighting (Zero Square Box Cutoff) */
 const SwatchStage = styled.div<{ $isAvailable: boolean }>`
   position: relative;
-  height: 350px;
+  height: 330px;
   width: 100%;
-  border-radius: 42px;
+  border-radius: 36px;
   overflow: hidden;
   background: ${({ $isAvailable }) =>
     $isAvailable
-      ? 'linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, rgba(0, 0, 0, 0.16) 100%), var(--swatch-stage-bg)'
-      : 'var(--btn-disabled-bg)'};
-  border: 1px solid var(--swatch-border);
+      ? 'radial-gradient(circle at 50% 50%, #d8dde1 0%, #b8c0c6 100%)'
+      : 'radial-gradient(circle at 50% 50%, #20242f 0%, #11141c 100%)'};
+  border: 1px solid rgba(255, 255, 255, 0.15);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 16px;
+  padding: 12px;
   cursor: pointer;
   transition:
     box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
     border-color 0.3s ease;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
-
-  &:hover {
-    box-shadow: 0 20px 44px rgba(0, 0, 0, 0.22);
-    border-color: rgba(215, 152, 114, 0.45);
-  }
 
   .garment-wrapper {
     width: 100%;
@@ -64,10 +70,10 @@ const SwatchStage = styled.div<{ $isAvailable: boolean }>`
     transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 
     img {
-      max-width: 88%;
-      max-height: 88%;
+      max-width: 92%;
+      max-height: 92%;
       object-fit: contain;
-      filter: drop-shadow(0 14px 26px rgba(0, 0, 0, 0.38));
+      filter: drop-shadow(0 14px 22px rgba(0, 0, 0, 0.32));
       transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     }
   }
@@ -119,7 +125,7 @@ const FlipButton = styled.button`
   background: rgba(10, 12, 16, 0.75);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   color: #ffffff;
   padding: 6px 14px;
   border-radius: 9999px;
@@ -182,14 +188,14 @@ const CardBody = styled.div`
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 16px 8px 6px 8px;
+  padding: 16px 8px 4px 8px;
   gap: 6px;
 
   h4.product-title {
     font-family: ${({ theme }) => theme.fonts.display};
     font-weight: 700;
     letter-spacing: 0.04em;
-    font-size: 1.05rem;
+    font-size: 1.02rem;
     text-transform: uppercase;
     color: var(--card-text);
     line-height: 1.25;
@@ -202,7 +208,7 @@ const CardBody = styled.div`
     }
   }
 
-  /* Centered Sizes Line (e.g. "S, M, L" / "S · M · L · XL") */
+  /* Centered Sizes Line ("S, M, L" / "S · M · L · XL") */
   .sizes-row {
     display: inline-flex;
     align-items: center;
@@ -224,7 +230,7 @@ const CardBody = styled.div`
         color: var(--card-text);
         font-weight: 700;
         background: var(--bg-surface);
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
       }
 
       &:hover:not(.active) {
@@ -233,7 +239,7 @@ const CardBody = styled.div`
     }
   }
 
-  /* Centered Price (e.g. "1000 ₽" -> "$25") */
+  /* Centered Price ("1000 ₽" -> "$25") */
   .price-row {
     display: flex;
     align-items: baseline;
@@ -315,10 +321,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   onOpenLookbook,
   onOpenWaitlist,
 }) => {
-  const [activeView, setActiveView] = useState<'front' | 'back'>('front');
-  const [selectedSize, setSelectedSize] = useState<string>('M');
-  const [isAdded, setIsAdded] = useState<boolean>(false);
-
   const isAvailable = product.status === 'available' || product.status === 'in_stock';
   const isOutOfStock = product.status === 'out_of_stock';
   const isSoon = product.status === 'soon';
@@ -336,6 +338,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     product.frontImage === 'tee2-front' ||
     product.name.toLowerCase().includes('lord') ||
     product.name.toLowerCase().includes("can't");
+
+  // Tee 2 defaults to the iconic back collage; Tee 1 defaults to front chest print
+  const [activeView, setActiveView] = useState<'front' | 'back'>(isTee2 ? 'back' : 'front');
+  const [selectedSize, setSelectedSize] = useState<string>('M');
+  const [isAdded, setIsAdded] = useState<boolean>(false);
 
   const frontSrc = isTee2 ? tee2FrontUrl : frontImgUrl;
   const backSrc = isTee2 ? tee2BackUrl : backImgUrl;
