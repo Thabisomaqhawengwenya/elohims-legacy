@@ -18,267 +18,21 @@ const CardWrapper = styled.div<{ $soon: boolean; $outOfStock: boolean }>`
   position: relative;
   background: var(--card-bg);
   border: 1px solid var(--card-border);
-  border-radius: 20px;
-  padding: 16px;
+  border-radius: 22px;
+  padding: 14px;
   box-shadow: var(--card-shadow);
   display: flex;
   flex-direction: column;
-  transition:
-    transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-    background 0.3s ease,
-    border-color 0.3s ease;
   color: var(--card-text);
-  opacity: ${({ $soon, $outOfStock }) => ($soon ? 0.88 : $outOfStock ? 0.8 : 1)};
-
-  &:hover {
-    transform: translateY(-6px);
-    box-shadow: var(--card-shadow);
-  }
-
-  .badge-row {
-    position: absolute;
-    top: 26px;
-    left: 26px;
-    display: flex;
-    gap: 6px;
-    z-index: 6;
-    flex-wrap: wrap;
-
-    span.status-pill {
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      padding: 3px 9px;
-      border-radius: 9999px;
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-
-      &.in-stock {
-        background: rgba(34, 197, 94, 0.9);
-        color: #ffffff;
-        box-shadow: 0 2px 8px rgba(34, 197, 94, 0.3);
-
-        &::before {
-          content: '';
-          width: 5px;
-          height: 5px;
-          border-radius: 50%;
-          background: #ffffff;
-        }
-      }
-
-      &.out-of-stock {
-        background: rgba(239, 68, 68, 0.9);
-        color: #ffffff;
-        box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
-      }
-
-      &.promo-tag {
-        background: var(--gold);
-        color: #0c0d12;
-        font-weight: 800;
-        box-shadow: 0 2px 8px rgba(217, 200, 169, 0.3);
-      }
-    }
-  }
-
-  h4 {
-    font-family: ${({ theme }) => theme.fonts.display};
-    font-weight: 400;
-    letter-spacing: 0.04em;
-    font-size: 1.35rem;
-    text-transform: uppercase;
-    color: var(--card-text);
-    line-height: 1.15;
-    margin-top: 14px;
-    padding: 0 2px;
-  }
-
-  .specs-line {
-    font-size: 0.8rem;
-    color: var(--text-muted);
-    margin-top: 5px;
-    padding: 0 2px;
-    line-height: 1.4;
-  }
-
-  .price-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-top: 10px;
-    padding: 0 2px;
-
-    .price-group {
-      display: flex;
-      align-items: baseline;
-      gap: 8px;
-
-      .price-val {
-        font-family: ${({ theme }) => theme.fonts.display};
-        font-size: 1.4rem;
-        color: var(--card-text);
-        font-weight: 600;
-        letter-spacing: 0.02em;
-
-        &.sale {
-          color: var(--gold);
-        }
-      }
-
-      .orig-price {
-        font-family: ${({ theme }) => theme.fonts.display};
-        font-size: 1rem;
-        color: var(--text-muted);
-        text-decoration: line-through;
-        opacity: 0.7;
-      }
-    }
-
-    .meta-val {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-    }
-  }
-
-  .size-header-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 14px;
-
-    span.lbl {
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-    }
-
-    button.guide-link {
-      background: transparent;
-      border: none;
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      color: var(--gold);
-      cursor: pointer;
-      padding: 0;
-      text-transform: uppercase;
-      transition: opacity 0.2s;
-
-      &:hover {
-        opacity: 0.8;
-        text-decoration: underline;
-      }
-    }
-  }
-
-  .size-picker {
-    display: flex;
-    gap: 6px;
-    margin-top: 6px;
-  }
-
-  button.action-btn {
-    margin-top: 14px;
-    width: 100%;
-    height: 44px;
-    border-radius: 9999px;
-    border: none;
-    background: var(--btn-primary-bg);
-    color: var(--btn-primary-text);
-    font-weight: 600;
-    font-size: 0.86rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition:
-      background 0.2s ease,
-      transform 0.15s ease,
-      color 0.2s ease,
-      border-color 0.2s ease;
-
-    &:hover:not(:disabled) {
-      background: var(--btn-hover-bg);
-      transform: translateY(-1px);
-    }
-
-    &:active:not(:disabled) {
-      transform: scale(0.98);
-    }
-
-    &.waitlist-btn {
-      background: var(--bg-surface);
-      border: 1.5px solid var(--border-medium);
-      color: var(--text-primary);
-      cursor: pointer;
-
-      &:hover {
-        background: var(--text-primary);
-        color: var(--bg);
-        border-color: var(--text-primary);
-        transform: translateY(-2px);
-      }
-    }
-
-    &.out-btn {
-      background: var(--bg-surface);
-      border: 1.5px solid var(--border-medium);
-      color: var(--text-muted);
-      cursor: pointer;
-
-      &:hover {
-        border-color: var(--text-primary);
-        color: var(--text-primary);
-      }
-    }
-
-    &:disabled {
-      background: var(--btn-disabled-bg);
-      color: var(--text-muted);
-      border: 1px solid var(--border-light);
-      cursor: not-allowed;
-    }
-
-    &.added {
-      background: #059669;
-      color: #ffffff;
-    }
-  }
-`;
-
-const SizePill = styled.button<{ $active: boolean }>`
-  flex: 1;
-  height: 32px;
-  border-radius: 9999px;
-  border: 1.5px solid
-    ${({ $active }) => ($active ? 'var(--card-text)' : 'var(--border-medium)')};
-  background: ${({ $active }) => ($active ? 'var(--card-text)' : 'transparent')};
-  color: ${({ $active }) => ($active ? 'var(--bg)' : 'var(--card-text)')};
-  font-size: 0.75rem;
-  font-weight: ${({ $active }) => ($active ? '700' : '500')};
-  cursor: pointer;
   transition:
-    background 0.15s,
-    color 0.15s,
-    border-color 0.15s;
+    transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.25s ease;
+  opacity: ${({ $soon, $outOfStock }) => ($soon ? 0.92 : $outOfStock ? 0.85 : 1)};
 
   &:hover {
-    border-color: var(--card-text);
-    background: ${({ $active }) =>
-      $active ? 'var(--card-text)' : 'rgba(128, 128, 128, 0.1)'};
+    transform: translateY(-4px);
+    border-color: var(--border-medium);
   }
 `;
 
@@ -286,17 +40,16 @@ const SwatchStage = styled.div<{ $isAvailable: boolean }>`
   position: relative;
   height: 310px;
   width: 100%;
-  border-radius: 14px;
+  border-radius: 16px;
   overflow: hidden;
   background: ${({ $isAvailable }) =>
-    $isAvailable
-      ? 'var(--swatch-stage-bg)'
-      : 'var(--btn-disabled-bg)'};
+    $isAvailable ? 'var(--swatch-stage-bg)' : 'var(--btn-disabled-bg)'};
   border: 1px solid var(--swatch-border);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 16px;
+  padding: 14px;
+  cursor: pointer;
 
   .garment-wrapper {
     width: 100%;
@@ -307,16 +60,16 @@ const SwatchStage = styled.div<{ $isAvailable: boolean }>`
     transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 
     img {
-      max-width: 92%;
-      max-height: 92%;
+      max-width: 90%;
+      max-height: 90%;
       object-fit: contain;
-      filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.3));
+      filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.35));
       transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     }
   }
 
   &:hover .garment-wrapper img {
-    transform: scale(1.05);
+    transform: scale(1.04);
   }
 
   .placeholder-box {
@@ -330,62 +83,217 @@ const SwatchStage = styled.div<{ $isAvailable: boolean }>`
 
     span.soon-tag {
       font-family: ${({ theme }) => theme.fonts.display};
-      font-size: 1.5rem;
-      letter-spacing: 0.2em;
+      font-size: 1.4rem;
+      letter-spacing: 0.18em;
       color: var(--text-muted);
       text-transform: uppercase;
       font-weight: 500;
     }
 
     span.drop-tag {
-      font-size: 0.78rem;
-      letter-spacing: 0.12em;
-      color: var(--text-muted);
+      font-size: 0.74rem;
+      letter-spacing: 0.1em;
+      color: var(--gold);
       text-transform: uppercase;
       margin-top: 6px;
-      font-weight: 600;
-      opacity: 0.8;
+      font-weight: 700;
     }
   }
 `;
 
-const ViewToggle = styled.div`
+/* Single Unified Front / Back Flip Button */
+const FlipButton = styled.button`
   position: absolute;
   top: 10px;
   right: 10px;
-  display: flex;
-  background: rgba(255, 255, 255, 0.88);
+  background: rgba(0, 0, 0, 0.65);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  padding: 5px 12px;
   border-radius: 9999px;
-  padding: 2px;
-  gap: 2px;
-  z-index: 5;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  font-family: ${({ theme }) => theme.fonts.display};
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  z-index: 6;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
 
-  button {
-    background: transparent;
-    border: none;
-    padding: 4px 10px;
+  &:hover {
+    background: #ffffff;
+    color: #000000;
+    border-color: #ffffff;
+    transform: scale(1.04);
+  }
+
+  &:active {
+    transform: scale(0.96);
+  }
+`;
+
+const ZoomPill = styled.button`
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.75);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.78rem;
+  cursor: pointer;
+  z-index: 6;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #ffffff;
+    color: #000000;
+    border-color: #ffffff;
+  }
+`;
+
+const CardBody = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 12px 4px 4px;
+  gap: 10px;
+
+  .title-price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 10px;
+
+    h4 {
+      font-family: ${({ theme }) => theme.fonts.display};
+      font-weight: 500;
+      letter-spacing: 0.03em;
+      font-size: 1.15rem;
+      text-transform: uppercase;
+      color: var(--card-text);
+      line-height: 1.2;
+      margin: 0;
+    }
+
+    .price-box {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+
+      span.price {
+        font-family: ${({ theme }) => theme.fonts.display};
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--gold);
+      }
+
+      span.orig-price {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        text-decoration: line-through;
+        opacity: 0.7;
+      }
+    }
+  }
+
+  p.specs-text {
+    margin: 0;
+    font-size: 0.76rem;
+    color: var(--text-muted);
+    line-height: 1.35;
+  }
+
+  /* Minimalist Size Ribbon */
+  .size-ribbon {
+    display: flex;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-medium);
     border-radius: 9999px;
-    font-size: 0.65rem;
+    padding: 2px;
+    gap: 2px;
+
+    button.size-chip {
+      flex: 1;
+      height: 28px;
+      border-radius: 9999px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-family: ${({ theme }) => theme.fonts.display};
+      font-size: 0.72rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+
+      &.active {
+        background: var(--btn-primary-bg);
+        color: var(--btn-primary-text);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      }
+
+      &:hover:not(.active) {
+        color: var(--text-primary);
+      }
+    }
+  }
+
+  /* Streamlined Minimal Action Button */
+  button.cta-btn {
+    width: 100%;
+    height: 42px;
+    border-radius: 9999px;
+    border: none;
+    background: var(--btn-primary-bg);
+    color: var(--btn-primary-text);
+    font-family: ${({ theme }) => theme.fonts.display};
+    font-size: 0.82rem;
     font-weight: 700;
     letter-spacing: 0.08em;
-    color: #52525b;
     text-transform: uppercase;
     cursor: pointer;
-    transition:
-      background 0.2s,
-      color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    box-shadow: var(--btn-shadow);
 
-    &.active {
-      background: #0c0d12;
+    &:hover:not(:disabled) {
+      background: var(--btn-hover-bg);
+      transform: translateY(-1px);
+    }
+
+    &:active:not(:disabled) {
+      transform: scale(0.98);
+    }
+
+    &.added {
+      background: #059669;
       color: #ffffff;
     }
 
-    &:hover:not(.active) {
-      color: #0c0d12;
+    &.soon-btn {
+      background: var(--bg-surface);
+      border: 1.5px solid var(--border-medium);
+      color: var(--text-primary);
+
+      &:hover {
+        background: var(--text-primary);
+        color: var(--bg);
+        border-color: var(--text-primary);
+      }
     }
   }
 `;
@@ -394,7 +302,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   product,
   onAddToCart,
   onOpenLookbook,
-  onOpenSizeGuide,
   onOpenWaitlist,
 }) => {
   const [activeView, setActiveView] = useState<'front' | 'back'>('front');
@@ -408,6 +315,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
   const hasDiscount = Boolean(product.originalPrice && product.price && product.originalPrice > product.price);
 
+  const isTee =
+    product.category?.toLowerCase().includes('t-shirt') ||
+    product.category?.toLowerCase().includes('tee') ||
+    product.name.toLowerCase().includes('tee');
+
   const isTee2 =
     product.id === 'lord-i-cant-tee' ||
     product.frontImage === 'tee2-front' ||
@@ -417,13 +329,19 @@ export const ProductCard: React.FC<ProductCardProps> = ({
   const frontSrc = isTee2 ? tee2FrontUrl : frontImgUrl;
   const backSrc = isTee2 ? tee2BackUrl : backImgUrl;
 
-  const handleAdd = () => {
+  const handleToggleView = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    setActiveView((prev) => (prev === 'front' ? 'back' : 'front'));
+  };
+
+  const handleAdd = (e: React.MouseEvent) => {
+    e.stopPropagation();
     if (!isAvailable || product.price === null) return;
     onAddToCart(product.name, product.price, selectedSize);
     setIsAdded(true);
     setTimeout(() => {
       setIsAdded(false);
-    }, 1400);
+    }, 1200);
   };
 
   return (
@@ -432,71 +350,45 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       $outOfStock={isOutOfStock}
       className="card"
     >
-      <div className="badge-row">
-        {isAvailable && (
-          <span className="status-pill in-stock">
-            In Stock
-          </span>
-        )}
-        {isOutOfStock && (
-          <span className="status-pill out-of-stock">
-            Out of Stock
-          </span>
-        )}
-        {product.promoBadge && (
-          <span className="status-pill promo-tag">
-            {product.promoBadge}
-          </span>
-        )}
-      </div>
-
-      <SwatchStage $isAvailable={isAvailable || isOutOfStock} className="sw">
+      <SwatchStage
+        $isAvailable={isAvailable || isOutOfStock}
+        className="sw"
+        onClick={() => {
+          if (isTee) {
+            handleToggleView();
+          }
+        }}
+        title={isTee ? `Click garment or button to view ${activeView === 'front' ? 'back' : 'front'}` : undefined}
+      >
         {isAvailable || isOutOfStock ? (
           <>
-            <ViewToggle>
-              <button
+            {/* Single Unified Flip Button */}
+            {isTee && (
+              <FlipButton
                 type="button"
-                className={activeView === 'front' ? 'active' : ''}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setActiveView('front');
-                }}
-                title="View Front Print"
+                onClick={handleToggleView}
+                title={`Switch to ${activeView === 'front' ? 'back' : 'front'} view`}
               >
-                Front
-              </button>
-              <button
-                type="button"
-                className={activeView === 'back' ? 'active' : ''}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setActiveView('back');
-                }}
-                title={isTee2 ? "View Back 'Lord, I Can't' Collage Print" : 'View Back Prayer Print'}
-              >
-                Back
-              </button>
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onOpenLookbook?.(activeView, product);
-                }}
-                title="Inspect Garment in Macro Studio"
-              >
-                Zoom ⌕
-              </button>
-            </ViewToggle>
+                <span>{activeView === 'front' ? 'Back ⟲' : 'Front ⟲'}</span>
+              </FlipButton>
+            )}
 
-            <div
-              className="garment-wrapper"
-              onClick={() => onOpenLookbook?.(activeView, product)}
-              style={{ cursor: 'pointer' }}
-              title="Click to zoom in macro studio"
+            {/* Subtle Zoom Trigger */}
+            <ZoomPill
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onOpenLookbook?.(activeView, product);
+              }}
+              title="Inspect Garment in Macro Studio"
             >
+              ⌕
+            </ZoomPill>
+
+            <div className="garment-wrapper">
               <img
                 src={activeView === 'front' ? frontSrc : backSrc}
-                alt={`${product.name} - ${activeView === 'front' ? 'Front' : 'Back'}`}
+                alt={`${product.name} - ${activeView}`}
                 loading="eager"
               />
             </div>
@@ -509,78 +401,75 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         )}
       </SwatchStage>
 
-      <h4>{product.name}</h4>
-
-      <p className="specs-line">
-        {product.specs || (isSoon ? 'Capsule Collection · Limited Run' : 'Oversized Boxy Fit · Heavyweight Cotton')}
-      </p>
-
-      <div className="price-row">
-        <div className="price-group">
-          <span className={`price-val ${hasDiscount ? 'sale' : ''}`}>
-            {product.price !== null ? `$${product.price}` : '—'}
-          </span>
-          {hasDiscount && (
-            <span className="orig-price">${product.originalPrice}</span>
-          )}
-        </div>
-        <span className="meta-val">{product.meta}</span>
-      </div>
-
-      {isAvailable && (
-        <>
-          <div className="size-header-row">
-            <span className="lbl">Select Size</span>
-            <button
-              type="button"
-              className="guide-link"
-              onClick={() => onOpenSizeGuide?.()}
-            >
-              Size Guide ↗
-            </button>
+      <CardBody>
+        <div className="title-price-row">
+          <h4>{product.name}</h4>
+          <div className="price-box">
+            <span className="price">
+              {product.price !== null ? `$${product.price}` : '—'}
+            </span>
+            {hasDiscount && (
+              <span className="orig-price">${product.originalPrice}</span>
+            )}
           </div>
-          <div className="size-picker">
+        </div>
+
+        <p className="specs-text">
+          {product.specs || (isSoon ? 'Limited Capsule Drop' : '280 GSM Heavyweight Cotton · Oversized Cut')}
+        </p>
+
+        {/* Minimalist Size Ribbon */}
+        {isAvailable && (
+          <div className="size-ribbon">
             {availableSizes.map((size) => (
-              <SizePill
+              <button
                 key={size}
                 type="button"
-                $active={selectedSize === size}
-                onClick={() => setSelectedSize(size)}
+                className={`size-chip ${selectedSize === size ? 'active' : ''}`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setSelectedSize(size);
+                }}
               >
                 {size}
-              </SizePill>
+              </button>
             ))}
           </div>
-        </>
-      )}
+        )}
 
-      {isAvailable ? (
-        <button
-          type="button"
-          onClick={handleAdd}
-          className={`action-btn add2 ${isAdded ? 'added' : ''}`}
-        >
-          {isAdded
-            ? `Added (${selectedSize}) ✓`
-            : `Add to cart · $${product.price}`}
-        </button>
-      ) : isOutOfStock ? (
-        <button
-          type="button"
-          onClick={() => onOpenWaitlist?.(`${product.name} (Restock Alert)`)}
-          className="action-btn out-btn"
-        >
-          Sold Out · Notify Restock ↗
-        </button>
-      ) : (
-        <button
-          type="button"
-          onClick={() => onOpenWaitlist?.(product.name)}
-          className="action-btn waitlist-btn"
-        >
-          VIP Drop Access ↗
-        </button>
-      )}
+        {/* Action Button */}
+        {isAvailable ? (
+          <button
+            type="button"
+            onClick={handleAdd}
+            className={`cta-btn ${isAdded ? 'added' : ''}`}
+          >
+            {isAdded ? `Added (${selectedSize}) ✓` : 'Add to Cart'}
+          </button>
+        ) : isOutOfStock ? (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onOpenWaitlist?.(`${product.name} (Restock Alert)`);
+            }}
+            className="cta-btn soon-btn"
+          >
+            Notify Restock ↗
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              onOpenWaitlist?.(product.name);
+            }}
+            className="cta-btn soon-btn"
+          >
+            VIP Drop Access ↗
+          </button>
+        )}
+      </CardBody>
     </CardWrapper>
   );
 };

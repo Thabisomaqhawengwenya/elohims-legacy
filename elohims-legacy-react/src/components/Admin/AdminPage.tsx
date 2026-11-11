@@ -1281,27 +1281,20 @@ const MerchStudioCardItem: React.FC<{
               src={teeView === 'front' ? frontSrc : backSrc}
               alt={`${item.name} (${teeView})`}
               className="garment-thumb"
+              onClick={() => setTeeView((v) => (v === 'front' ? 'back' : 'front'))}
+              style={{ cursor: 'pointer' }}
             />
             <div className="view-switch-pills">
               <button
                 type="button"
-                className={teeView === 'front' ? 'active' : ''}
+                className="active"
                 onClick={(e) => {
                   e.stopPropagation();
-                  setTeeView('front');
+                  setTeeView((v) => (v === 'front' ? 'back' : 'front'));
                 }}
+                title={`Switch to ${teeView === 'front' ? 'Back' : 'Front'} view`}
               >
-                Front
-              </button>
-              <button
-                type="button"
-                className={teeView === 'back' ? 'active' : ''}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setTeeView('back');
-                }}
-              >
-                Back
+                {teeView === 'front' ? 'Back ⟲' : 'Front ⟲'}
               </button>
             </div>
           </>
