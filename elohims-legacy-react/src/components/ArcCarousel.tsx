@@ -25,7 +25,7 @@ const CarouselContainer = styled.div`
 
 const ArcStage = styled.div`
   width: 100%;
-  height: 560px;
+  height: 580px;
   position: relative;
   perspective: 1400px;
   display: flex;
@@ -39,7 +39,7 @@ const ArcStage = styled.div`
   }
 
   @media (max-width: 768px) {
-    height: 520px;
+    height: 540px;
   }
 `;
 

@@ -16,40 +16,44 @@ interface ProductCardProps {
 
 const CardWrapper = styled.div<{ $soon: boolean; $outOfStock: boolean }>`
   position: relative;
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: 22px;
-  padding: 14px;
-  box-shadow: var(--card-shadow);
   display: flex;
   flex-direction: column;
+  width: 100%;
   color: var(--card-text);
-  transition:
-    transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-    border-color 0.25s ease;
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
   opacity: ${({ $soon, $outOfStock }) => ($soon ? 0.92 : $outOfStock ? 0.85 : 1)};
 
   &:hover {
     transform: translateY(-4px);
-    border-color: var(--border-medium);
   }
 `;
 
+/* Squircle Garment Image Stage inspired by Reference Image */
 const SwatchStage = styled.div<{ $isAvailable: boolean }>`
   position: relative;
-  height: 310px;
+  height: 350px;
   width: 100%;
-  border-radius: 16px;
+  border-radius: 42px;
   overflow: hidden;
   background: ${({ $isAvailable }) =>
-    $isAvailable ? 'var(--swatch-stage-bg)' : 'var(--btn-disabled-bg)'};
+    $isAvailable
+      ? 'linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, rgba(0, 0, 0, 0.16) 100%), var(--swatch-stage-bg)'
+      : 'var(--btn-disabled-bg)'};
   border: 1px solid var(--swatch-border);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 14px;
+  padding: 16px;
   cursor: pointer;
+  transition:
+    box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.3s ease;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+
+  &:hover {
+    box-shadow: 0 20px 44px rgba(0, 0, 0, 0.22);
+    border-color: rgba(215, 152, 114, 0.45);
+  }
 
   .garment-wrapper {
     width: 100%;
@@ -60,16 +64,16 @@ const SwatchStage = styled.div<{ $isAvailable: boolean }>`
     transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 
     img {
-      max-width: 90%;
-      max-height: 90%;
+      max-width: 88%;
+      max-height: 88%;
       object-fit: contain;
-      filter: drop-shadow(0 12px 20px rgba(0, 0, 0, 0.35));
+      filter: drop-shadow(0 14px 26px rgba(0, 0, 0, 0.38));
       transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     }
   }
 
   &:hover .garment-wrapper img {
-    transform: scale(1.04);
+    transform: scale(1.05);
   }
 
   .placeholder-box {
@@ -81,19 +85,25 @@ const SwatchStage = styled.div<{ $isAvailable: boolean }>`
     width: 100%;
     height: 100%;
 
+    span.glyph {
+      font-size: 2.8rem;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
     span.soon-tag {
       font-family: ${({ theme }) => theme.fonts.display};
-      font-size: 1.4rem;
-      letter-spacing: 0.18em;
+      font-size: 1.25rem;
+      letter-spacing: 0.16em;
       color: var(--text-muted);
       text-transform: uppercase;
-      font-weight: 500;
+      font-weight: 600;
     }
 
     span.drop-tag {
       font-size: 0.74rem;
-      letter-spacing: 0.1em;
-      color: var(--gold);
+      letter-spacing: 0.12em;
+      color: #d79872;
       text-transform: uppercase;
       margin-top: 6px;
       font-weight: 700;
@@ -104,14 +114,14 @@ const SwatchStage = styled.div<{ $isAvailable: boolean }>`
 /* Single Unified Front / Back Flip Button */
 const FlipButton = styled.button`
   position: absolute;
-  top: 10px;
-  right: 10px;
-  background: rgba(0, 0, 0, 0.65);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  top: 14px;
+  right: 14px;
+  background: rgba(10, 12, 16, 0.75);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.18);
   color: #ffffff;
-  padding: 5px 12px;
+  padding: 6px 14px;
   border-radius: 9999px;
   font-family: ${({ theme }) => theme.fonts.display};
   font-size: 0.68rem;
@@ -123,8 +133,8 @@ const FlipButton = styled.button`
   align-items: center;
   gap: 5px;
   z-index: 6;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
 
   &:hover {
     background: #ffffff;
@@ -140,20 +150,20 @@ const FlipButton = styled.button`
 
 const ZoomPill = styled.button`
   position: absolute;
-  top: 10px;
-  left: 10px;
-  background: rgba(0, 0, 0, 0.45);
+  top: 14px;
+  left: 14px;
+  background: rgba(10, 12, 16, 0.55);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: rgba(255, 255, 255, 0.75);
-  width: 28px;
-  height: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.85);
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   cursor: pointer;
   z-index: 6;
   transition: all 0.2s ease;
@@ -162,104 +172,101 @@ const ZoomPill = styled.button`
     background: #ffffff;
     color: #000000;
     border-color: #ffffff;
+    transform: scale(1.06);
   }
 `;
 
+/* Clean Minimal Centered Details Stack matching Reference */
 const CardBody = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 12px 4px 4px;
-  gap: 10px;
+  align-items: center;
+  text-align: center;
+  padding: 16px 8px 6px 8px;
+  gap: 6px;
 
-  .title-price-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 10px;
-
-    h4 {
-      font-family: ${({ theme }) => theme.fonts.display};
-      font-weight: 500;
-      letter-spacing: 0.03em;
-      font-size: 1.15rem;
-      text-transform: uppercase;
-      color: var(--card-text);
-      line-height: 1.2;
-      margin: 0;
-    }
-
-    .price-box {
-      display: flex;
-      align-items: baseline;
-      gap: 6px;
-
-      span.price {
-        font-family: ${({ theme }) => theme.fonts.display};
-        font-size: 1.25rem;
-        font-weight: 700;
-        color: var(--gold);
-      }
-
-      span.orig-price {
-        font-size: 0.8rem;
-        color: var(--text-muted);
-        text-decoration: line-through;
-        opacity: 0.7;
-      }
-    }
-  }
-
-  p.specs-text {
+  h4.product-title {
+    font-family: ${({ theme }) => theme.fonts.display};
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    font-size: 1.05rem;
+    text-transform: uppercase;
+    color: var(--card-text);
+    line-height: 1.25;
     margin: 0;
-    font-size: 0.76rem;
-    color: var(--text-muted);
-    line-height: 1.35;
+    cursor: pointer;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: #d79872;
+    }
   }
 
-  /* Minimalist Size Ribbon */
-  .size-ribbon {
-    display: flex;
-    background: var(--bg-surface);
-    border: 1px solid var(--border-medium);
-    border-radius: 9999px;
-    padding: 2px;
-    gap: 2px;
+  /* Centered Sizes Line (e.g. "S, M, L" / "S · M · L · XL") */
+  .sizes-row {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 0.84rem;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+    font-weight: 500;
+    margin: 1px 0;
 
-    button.size-chip {
-      flex: 1;
-      height: 28px;
-      border-radius: 9999px;
-      border: none;
-      background: transparent;
-      color: var(--text-muted);
-      font-family: ${({ theme }) => theme.fonts.display};
-      font-size: 0.72rem;
-      font-weight: 700;
+    span.size-chip {
       cursor: pointer;
+      padding: 1px 6px;
+      border-radius: 6px;
       transition: all 0.15s ease;
 
       &.active {
-        background: var(--btn-primary-bg);
-        color: var(--btn-primary-text);
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        color: var(--card-text);
+        font-weight: 700;
+        background: var(--bg-surface);
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
       }
 
       &:hover:not(.active) {
-        color: var(--text-primary);
+        color: var(--card-text);
       }
     }
   }
 
-  /* Streamlined Minimal Action Button */
+  /* Centered Price (e.g. "1000 ₽" -> "$25") */
+  .price-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 8px;
+    margin: 2px 0 10px 0;
+
+    span.price {
+      font-family: ${({ theme }) => theme.fonts.display};
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--card-text);
+    }
+
+    span.orig-price {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-decoration: line-through;
+      opacity: 0.7;
+    }
+  }
+
+  /* Full Pill Action Button styled in Reference Caramel/Terracotta Tone */
   button.cta-btn {
     width: 100%;
-    height: 42px;
+    max-width: 240px;
+    height: 46px;
     border-radius: 9999px;
     border: none;
-    background: var(--btn-primary-bg);
-    color: var(--btn-primary-text);
+    background: #d79872;
+    color: #ffffff;
     font-family: ${({ theme }) => theme.fonts.display};
-    font-size: 0.82rem;
+    font-size: 0.84rem;
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -267,32 +274,36 @@ const CardBody = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s ease;
-    box-shadow: var(--btn-shadow);
+    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 6px 18px rgba(215, 152, 114, 0.35);
 
     &:hover:not(:disabled) {
-      background: var(--btn-hover-bg);
-      transform: translateY(-1px);
+      background: #c88962;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 24px rgba(215, 152, 114, 0.45);
     }
 
     &:active:not(:disabled) {
-      transform: scale(0.98);
+      transform: scale(0.96);
     }
 
     &.added {
-      background: #059669;
+      background: #22c55e;
       color: #ffffff;
+      box-shadow: 0 6px 18px rgba(34, 197, 94, 0.35);
     }
 
     &.soon-btn {
       background: var(--bg-surface);
       border: 1.5px solid var(--border-medium);
       color: var(--text-primary);
+      box-shadow: none;
 
       &:hover {
-        background: var(--text-primary);
-        color: var(--bg);
-        border-color: var(--text-primary);
+        background: var(--card-bg);
+        border-color: #d79872;
+        color: #d79872;
+        transform: translateY(-2px);
       }
     }
   }
@@ -350,13 +361,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({
       $outOfStock={isOutOfStock}
       className="card"
     >
+      {/* Squircle Garment Stage */}
       <SwatchStage
         $isAvailable={isAvailable || isOutOfStock}
         className="sw"
         onClick={() => {
           onOpenLookbook?.(activeView, product);
         }}
-        title={`Click to view ${product.name} showcase`}
+        title={`Click to quick view ${product.name}`}
       >
         {isAvailable || isOutOfStock ? (
           <>
@@ -399,54 +411,52 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             className="placeholder-box"
             onClick={() => onOpenLookbook?.(activeView, product)}
           >
+            <span className="glyph">✝</span>
             <span className="soon-tag">Coming Soon</span>
             <span className="drop-tag">Next Drop</span>
           </div>
         )}
       </SwatchStage>
 
+      {/* Centered Minimal Details Stack matching Reference */}
       <CardBody>
-        <div className="title-price-row">
-          <h4
-            onClick={() => onOpenLookbook?.(activeView, product)}
-            style={{ cursor: 'pointer' }}
-          >
-            {product.name}
-          </h4>
-          <div className="price-box">
-            <span className="price">
-              {product.price !== null ? `$${product.price}` : '—'}
-            </span>
-            {hasDiscount && (
-              <span className="orig-price">${product.originalPrice}</span>
-            )}
-          </div>
-        </div>
+        <h4
+          className="product-title"
+          onClick={() => onOpenLookbook?.(activeView, product)}
+        >
+          {product.name}
+        </h4>
 
-        <p className="specs-text">
-          {product.specs || (isSoon ? 'Limited Capsule Drop' : '280 GSM Heavyweight Cotton · Oversized Cut')}
-        </p>
-
-        {/* Minimalist Size Ribbon */}
-        {isAvailable && (
-          <div className="size-ribbon">
-            {availableSizes.map((size) => (
-              <button
-                key={size}
-                type="button"
+        {/* Centered Available Sizes ("S, M, L" / "S · M · L · XL") */}
+        <div className="sizes-row">
+          {availableSizes.map((size, idx) => (
+            <React.Fragment key={size}>
+              <span
                 className={`size-chip ${selectedSize === size ? 'active' : ''}`}
                 onClick={(e) => {
                   e.stopPropagation();
                   setSelectedSize(size);
                 }}
+                title={`Select size ${size}`}
               >
                 {size}
-              </button>
-            ))}
-          </div>
-        )}
+              </span>
+              {idx < availableSizes.length - 1 && <span>,</span>}
+            </React.Fragment>
+          ))}
+        </div>
 
-        {/* Action Button */}
+        {/* Centered Price ("1000 ₽" -> "$25") */}
+        <div className="price-row">
+          <span className="price">
+            {product.price !== null ? `$${product.price}` : '—'}
+          </span>
+          {hasDiscount && (
+            <span className="orig-price">${product.originalPrice}</span>
+          )}
+        </div>
+
+        {/* Full Pill Warm Caramel/Terracotta Action Button */}
         {isAvailable ? (
           <button
             type="button"
