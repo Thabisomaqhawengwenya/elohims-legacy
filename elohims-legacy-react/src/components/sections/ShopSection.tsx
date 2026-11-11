@@ -6,7 +6,7 @@ import { Product } from '../../data/content';
 interface ShopSectionProps {
   products: Product[];
   onAddToCart: (name: string, price: number, size: string) => void;
-  onOpenLookbook?: (view: 'front' | 'back') => void;
+  onOpenLookbook?: (view: 'front' | 'back', product?: Product) => void;
   onOpenSizeGuide?: () => void;
   onOpenWaitlist?: (productName: string) => void;
 }
@@ -20,24 +20,28 @@ const ShopContainer = styled.section`
 
   .header-group {
     width: 100%;
-    max-width: 1240px;
+    max-width: 1280px;
     margin-bottom: 24px;
   }
 `;
 
 const Grid = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 26px;
   width: 100%;
-  max-width: 1240px;
+  max-width: 1280px;
   margin-top: 20px;
 
-  @media (max-width: 1080px) {
+  @media (min-width: 1180px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  @media (max-width: 1179px) and (min-width: 640px) {
     grid-template-columns: repeat(2, 1fr);
   }
 
-  @media (max-width: 720px) {
+  @media (max-width: 639px) {
     grid-template-columns: 1fr;
   }
 `;

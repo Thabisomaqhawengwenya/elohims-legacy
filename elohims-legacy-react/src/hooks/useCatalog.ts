@@ -9,7 +9,7 @@ import {
   INITIAL_SETTINGS,
 } from '../data/content';
 
-const CATALOG_STORAGE_KEY = 'elohims_catalog_v3';
+const CATALOG_STORAGE_KEY = 'elohims_catalog_v4';
 const PROMO_STORAGE_KEY = 'elohims_promo_v1';
 const SETTINGS_STORAGE_KEY = 'elohims_settings_v1';
 
@@ -18,7 +18,16 @@ export function useCatalog() {
     if (typeof window !== 'undefined') {
       try {
         const saved = localStorage.getItem(CATALOG_STORAGE_KEY);
-        if (saved) return JSON.parse(saved);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            const existingIds = new Set(parsed.map((p: Product) => p.id));
+            const missingDefaults = (STORE_DATA.catalog as Product[]).filter(
+              (p) => !existingIds.has(p.id)
+            );
+            return missingDefaults.length > 0 ? [...parsed, ...missingDefaults] : parsed;
+          }
+        }
       } catch (err) {
         console.error('Failed to parse catalog from storage', err);
       }

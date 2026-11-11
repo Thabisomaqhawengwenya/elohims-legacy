@@ -2,11 +2,15 @@ import React, { useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 import frontImgUrl from '../assets/front.webp';
 import backImgUrl from '../assets/back.webp';
+import tee2FrontUrl from '../assets/tee2-front.jpg';
+import tee2BackUrl from '../assets/tee2-back.jpg';
+import { Product } from '../data/content';
 
 interface LookbookModalProps {
   isOpen: boolean;
   onClose: () => void;
   initialView?: 'front' | 'back';
+  product?: Product | null;
 }
 
 const fadeIn = keyframes`
@@ -246,14 +250,24 @@ export const LookbookModal: React.FC<LookbookModalProps> = ({
   isOpen,
   onClose,
   initialView = 'front',
+  product,
 }) => {
   const [activeView, setActiveView] = useState<'front' | 'back'>(initialView);
   const [isZoomed, setIsZoomed] = useState<boolean>(false);
 
+  const isTee2 =
+    product?.id === 'lord-i-cant-tee' ||
+    product?.frontImage === 'tee2-front' ||
+    Boolean(product?.name.toLowerCase().includes('lord') || product?.name.toLowerCase().includes("can't"));
+
+  const frontSrc = isTee2 ? tee2FrontUrl : frontImgUrl;
+  const backSrc = isTee2 ? tee2BackUrl : backImgUrl;
+  const displayName = product?.name || 'Directed by Elohim Tee';
+
   useEffect(() => {
     setActiveView(initialView);
     setIsZoomed(false);
-  }, [initialView, isOpen]);
+  }, [initialView, isOpen, product]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -275,11 +289,13 @@ export const LookbookModal: React.FC<LookbookModalProps> = ({
       <ModalContainer onClick={(e) => e.stopPropagation()}>
         <ModalHeader>
           <div className="tag-group">
-            <h3>Garment Macro Studio</h3>
+            <h3>{displayName}</h3>
             <span className="badge">
               {activeView === 'front'
-                ? 'Chest Logo Detail'
-                : 'Back Scripture Print'}
+                ? 'Chest Print Detail'
+                : isTee2
+                  ? 'Collage & Scripture Badges'
+                  : "Back Lord's Prayer"}
             </span>
           </div>
           <button
@@ -297,8 +313,8 @@ export const LookbookModal: React.FC<LookbookModalProps> = ({
           onClick={() => setIsZoomed((prev) => !prev)}
         >
           <img
-            src={activeView === 'front' ? frontImgUrl : backImgUrl}
-            alt={`Macro inspection of ${activeView} print`}
+            src={activeView === 'front' ? frontSrc : backSrc}
+            alt={`Macro inspection of ${displayName} ${activeView} print`}
           />
           <div className="zoom-hint">
             {isZoomed ? 'Click anywhere to zoom out' : 'Click garment to inspect print details (185%)'}
@@ -325,7 +341,7 @@ export const LookbookModal: React.FC<LookbookModalProps> = ({
                 setIsZoomed(false);
               }}
             >
-              Back Prayer (Matt 6:9–13)
+              {isTee2 ? "Back ('Lord, I Can't')" : 'Back Prayer (Matt 6:9–13)'}
             </button>
           </div>
 
@@ -355,11 +371,19 @@ export const LookbookModal: React.FC<LookbookModalProps> = ({
           </div>
           <div className="spec-item">
             <span className="prop">Print Technology</span>
-            <span className="val">High-Density Soft Plastisol Ink</span>
+            <span className="val">
+              {isTee2
+                ? 'High-Density Screenprint & Cutout Texture'
+                : 'High-Density Soft Plastisol Ink'}
+            </span>
           </div>
           <div className="spec-item">
-            <span className="prop">Collar & Seams</span>
-            <span className="val">Reinforced 1.25" Ribbed Crewneck</span>
+            <span className="prop">{isTee2 ? 'Scripture Seals' : 'Collar & Seams'}</span>
+            <span className="val">
+              {isTee2
+                ? '2 Cor 12:9 · Isa 40:29 · Matt 19:26 · Phil 4:13 · Ex 14:14'
+                : 'Reinforced 1.25" Ribbed Crewneck'}
+            </span>
           </div>
         </SpecsFooter>
       </ModalContainer>

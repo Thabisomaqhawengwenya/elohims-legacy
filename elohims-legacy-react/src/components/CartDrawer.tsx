@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 import { CartItem } from '../hooks/useCart';
 import frontImgUrl from '../assets/front.webp';
+import tee2FrontUrl from '../assets/tee2-front.jpg';
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -562,12 +563,18 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
               </button>
             </EmptyState>
           ) : (
-            items.map((item) => (
-              <CartItemRow key={`${item.name}-${item.size}`}>
-                <div className="item-thumb">
-                  <img src={frontImgUrl} alt={item.name} />
-                </div>
-                <div className="item-info">
+            items.map((item) => {
+              const isTee2 =
+                item.name.toLowerCase().includes('lord') ||
+                item.name.toLowerCase().includes("can't");
+              const itemThumb = isTee2 ? tee2FrontUrl : frontImgUrl;
+
+              return (
+                <CartItemRow key={`${item.name}-${item.size}`}>
+                  <div className="item-thumb">
+                    <img src={itemThumb} alt={item.name} />
+                  </div>
+                  <div className="item-info">
                   <div className="item-header">
                     <h5>{item.name}</h5>
                     <button
@@ -608,7 +615,8 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({
                   </div>
                 </div>
               </CartItemRow>
-            ))
+              );
+            })
           )}
         </ItemsBody>
 

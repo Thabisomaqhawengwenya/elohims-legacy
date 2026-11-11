@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import frontImgUrl from '../assets/front.webp';
 import backImgUrl from '../assets/back.webp';
+import tee2FrontUrl from '../assets/tee2-front.jpg';
+import tee2BackUrl from '../assets/tee2-back.jpg';
 import { Product } from '../data/content';
 
 interface ProductCardProps {
   product: Product;
   onAddToCart: (name: string, price: number, size: string) => void;
-  onOpenLookbook?: (view: 'front' | 'back') => void;
+  onOpenLookbook?: (view: 'front' | 'back', product?: Product) => void;
   onOpenSizeGuide?: () => void;
   onOpenWaitlist?: (productName: string) => void;
 }
@@ -406,6 +408,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
   const hasDiscount = Boolean(product.originalPrice && product.price && product.originalPrice > product.price);
 
+  const isTee2 =
+    product.id === 'lord-i-cant-tee' ||
+    product.frontImage === 'tee2-front' ||
+    product.name.toLowerCase().includes('lord') ||
+    product.name.toLowerCase().includes("can't");
+
+  const frontSrc = isTee2 ? tee2FrontUrl : frontImgUrl;
+  const backSrc = isTee2 ? tee2BackUrl : backImgUrl;
+
   const handleAdd = () => {
     if (!isAvailable || product.price === null) return;
     onAddToCart(product.name, product.price, selectedSize);
@@ -461,7 +472,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                   e.stopPropagation();
                   setActiveView('back');
                 }}
-                title="View Back Prayer Print"
+                title={isTee2 ? "View Back 'Lord, I Can't' Collage Print" : 'View Back Prayer Print'}
               >
                 Back
               </button>
@@ -469,7 +480,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
-                  onOpenLookbook?.(activeView);
+                  onOpenLookbook?.(activeView, product);
                 }}
                 title="Inspect Garment in Macro Studio"
               >
@@ -479,12 +490,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
             <div
               className="garment-wrapper"
-              onClick={() => onOpenLookbook?.(activeView)}
+              onClick={() => onOpenLookbook?.(activeView, product)}
               style={{ cursor: 'pointer' }}
               title="Click to zoom in macro studio"
             >
               <img
-                src={activeView === 'front' ? frontImgUrl : backImgUrl}
+                src={activeView === 'front' ? frontSrc : backSrc}
                 alt={`${product.name} - ${activeView === 'front' ? 'Front' : 'Back'}`}
                 loading="eager"
               />

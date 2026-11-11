@@ -11,6 +11,8 @@ export interface Product {
   specs?: string;
   promoBadge?: string;
   image?: string;
+  frontImage?: string;
+  backImage?: string;
   meta: string;
   description?: string;
   inStockCount?: number;
@@ -94,11 +96,30 @@ export const STORE_DATA = {
       status: 'in_stock',
       category: 'T-Shirt',
       specs: 'Oversized Boxy Fit · 280 GSM Cotton',
-      promoBadge: 'DROP 01',
+      promoBadge: 'SIGNATURE PIECE',
       meta: 'S – XL',
       inStockCount: 35,
+      frontImage: 'front',
+      backImage: 'back',
       description:
         'Oversized boxy fit, drop shoulder, soft-washed heavyweight cotton. Directed by Elohim on the front, Matthew 6:9-13 prayer on the back.',
+    },
+    {
+      id: 'lord-i-cant-tee',
+      name: "Lord, I Can't But You Can Tee",
+      price: 25,
+      originalPrice: 30,
+      sizes: ['S', 'M', 'L', 'XL'],
+      status: 'in_stock',
+      category: 'T-Shirt',
+      specs: 'Oversized Boxy Cut · 280 GSM Cotton · Scripture Badges',
+      promoBadge: 'DROP 02',
+      meta: 'S – XL',
+      inStockCount: 40,
+      frontImage: 'tee2-front',
+      backImage: 'tee2-back',
+      description:
+        "Oversized boxy streetwear tee in soft-washed black. Directed by Elohim collage on the chest, and 'Lord, I Can't But You Can' collage with scripture seals across the back.",
     },
     {
       id: 'sweaters',

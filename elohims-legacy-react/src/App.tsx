@@ -25,7 +25,7 @@ import { useCart } from './hooks/useCart';
 import { useCatalog } from './hooks/useCatalog';
 import { useMouse } from './hooks/useMouse';
 import { useReveal } from './hooks/useReveal';
-import { STORE_DATA } from './data/content';
+import { STORE_DATA, Product } from './data/content';
 
 export const App: React.FC = () => {
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
@@ -85,6 +85,7 @@ export const App: React.FC = () => {
   const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
   const [isSizeGuideOpen, setIsSizeGuideOpen] = useState<boolean>(false);
   const [lookbookView, setLookbookView] = useState<'front' | 'back' | null>(null);
+  const [lookbookProduct, setLookbookProduct] = useState<Product | null>(null);
   const [waitlistProduct, setWaitlistProduct] = useState<string | null>(null);
 
   const {
@@ -174,13 +175,13 @@ export const App: React.FC = () => {
             <BackPrintSection />
             <ProductSection
               onAddToCart={handleAddToCart}
-              onOpenLookbook={(view) => setLookbookView(view)}
+              onOpenLookbook={(view) => { setLookbookProduct(null); setLookbookView(view); }}
               onOpenSizeGuide={() => setIsSizeGuideOpen(true)}
             />
             <ShopSection
               products={products}
               onAddToCart={handleAddToCart}
-              onOpenLookbook={(view) => setLookbookView(view)}
+              onOpenLookbook={(view, product) => { setLookbookProduct(product ?? null); setLookbookView(view); }}
               onOpenSizeGuide={() => setIsSizeGuideOpen(true)}
               onOpenWaitlist={(productName) => setWaitlistProduct(productName)}
             />
@@ -213,7 +214,8 @@ export const App: React.FC = () => {
           <LookbookModal
             isOpen={lookbookView !== null}
             initialView={lookbookView ?? 'front'}
-            onClose={() => setLookbookView(null)}
+            product={lookbookProduct}
+            onClose={() => { setLookbookView(null); setLookbookProduct(null); }}
           />
 
           {/* VIP Capsule Drop Waitlist Modal */}

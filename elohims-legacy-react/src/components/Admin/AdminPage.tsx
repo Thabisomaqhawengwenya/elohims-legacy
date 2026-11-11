@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import { Product, ProductStatus, StorePromotion, StoreSettings } from '../../data/content';
 import frontImgUrl from '../../assets/front.webp';
 import backImgUrl from '../../assets/back.webp';
+import tee2FrontUrl from '../../assets/tee2-front.jpg';
+import tee2BackUrl from '../../assets/tee2-back.jpg';
 
 interface AdminPageProps {
   products: Product[];
@@ -1255,6 +1257,15 @@ const MerchStudioCardItem: React.FC<{
     item.category?.toLowerCase().includes('tee') ||
     item.name.toLowerCase().includes('tee');
 
+  const isTee2 =
+    item.id === 'lord-i-cant-tee' ||
+    item.frontImage === 'tee2-front' ||
+    item.name.toLowerCase().includes('lord') ||
+    item.name.toLowerCase().includes("can't");
+
+  const frontSrc = isTee2 ? tee2FrontUrl : frontImgUrl;
+  const backSrc = isTee2 ? tee2BackUrl : backImgUrl;
+
   return (
     <MerchStudioCard>
       {/* Ash Grey Garment Stage */}
@@ -1267,7 +1278,7 @@ const MerchStudioCardItem: React.FC<{
         {isTee ? (
           <>
             <img
-              src={teeView === 'front' ? frontImgUrl : backImgUrl}
+              src={teeView === 'front' ? frontSrc : backSrc}
               alt={`${item.name} (${teeView})`}
               className="garment-thumb"
             />
@@ -1879,12 +1890,19 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                     {filteredProducts.map((item) => {
                       const currentStatus =
                         item.status === 'available' ? 'in_stock' : item.status;
+                      const isTee2 =
+                        item.id === 'lord-i-cant-tee' ||
+                        item.frontImage === 'tee2-front' ||
+                        item.name.toLowerCase().includes('lord') ||
+                        item.name.toLowerCase().includes("can't");
+                      const rowThumb = isTee2 ? tee2FrontUrl : frontImgUrl;
+
                       return (
                         <tr key={item.id}>
                           <td className="piece-cell">
                             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                               <img
-                                src={frontImgUrl}
+                                src={rowThumb}
                                 alt={item.name}
                                 style={{ width: '34px', height: '34px', borderRadius: '6px', objectFit: 'contain' }}
                               />
